@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">Test</string>
+    <string name="red">Red</string>
+    <string name="green">Green</string>
+    <string name="blue">Blue</string>
+    <string name="flash">flash</string>
+    <string name="pulse">pulse</string>
+    <string name="blink">blink</string>
+    <string name="rainbow">rainbow</string>
 </resources>
