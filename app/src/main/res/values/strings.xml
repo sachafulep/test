@@ -7,4 +7,7 @@
     <string name="pulse">pulse</string>
     <string name="blink">blink</string>
     <string name="rainbow">rainbow</string>
+    <string name="interests">Interests</string>
+    <string name="status_searching">Searching for nearby wearable…</string>
+    <string name="custom">Custom</string>
 </resources>

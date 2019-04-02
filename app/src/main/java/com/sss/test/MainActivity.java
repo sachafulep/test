@@ -1,177 +1,100 @@
 package com.sss.test;
 
-import android.animation.ValueAnimator;
+import android.Manifest;
+import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothDevice;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
+import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.constraint.ConstraintLayout;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.SeekBar;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+
+import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
-    BluetoothManager btManager;
-    ColorView colorView;
-    SeekBar sbRed;
-    SeekBar sbGreen;
-    SeekBar sbBlue;
-    Button btnBlink;
-    Button btnPulse;
-    Button btnRainbow;
-    Button btnPair;
-    Button btnSend;
-    BleConnectionManager connMan;
+    BleConnectionManager bleConnectionManager;
+    BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+    private static final int REQUEST_ACCESS_COURSE_LOCATION = 2;
+    private static final int REQUEST_ENABLE_BT = 1;
+    TextView tvLoading;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        btManager = new BluetoothManager(MainActivity.this);
-        btManager.getLocationPermission();
+        tvLoading = findViewById(R.id.tvLoading);
+        getLocationPermission();
 
-        if (!btManager.bluetoothAdapter.isEnabled()) {
-            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-            startActivityForResult(enableBtIntent, BluetoothManager.REQUEST_ENABLE_BT);
+        if (bluetoothAdapter.isEnabled()) {
+            searchForBluetoothDevices();
         } else {
-            if (!btManager.checkPairedDevices()) {
-                searchForBluetoothDevices();
-            }
+            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+            startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
         }
 
-        colorView = findViewById(R.id.colorView);
-        sbRed = findViewById(R.id.sbRed);
-        sbGreen = findViewById(R.id.sbGreen);
-        sbBlue = findViewById(R.id.sbBlue);
-        btnBlink = findViewById(R.id.btnBlink);
-        btnPulse = findViewById(R.id.btnPulse);
-        btnRainbow = findViewById(R.id.btnRainbow);
-        btnPair = findViewById(R.id.btnPair);
-        sbRed.setOnSeekBarChangeListener(sbListener);
-        sbGreen.setOnSeekBarChangeListener(sbListener);
-        sbBlue.setOnSeekBarChangeListener(sbListener);
-        btnBlink.setOnClickListener(btnListener);
-        btnPulse.setOnClickListener(btnListener);
-        btnRainbow.setOnClickListener(btnListener);
-        btnPair.setOnClickListener(btnListener);
-        btnSend =  findViewById(R.id.btnSend);
-        btnSend.setOnClickListener(btnListener);
+        Button btnInterests = findViewById(R.id.btnInterests);
+        Button btnCustom = findViewById(R.id.btnCustom);
+        btnInterests.setOnClickListener(listener);
+        btnCustom.setOnClickListener(listener);
     }
-    private Button.OnClickListener btnListener = new View.OnClickListener() {
+
+    Button.OnClickListener listener = new Button.OnClickListener() {
+        Intent intent;
+
         @Override
         public void onClick(View v) {
-            if (v.equals(btnBlink)) {
-                ValueAnimator animator = ValueAnimator.ofInt(0, 10);
-                animator.setDuration(3000);
-                animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                    @Override
-                    public void onAnimationUpdate(ValueAnimator animation) {
-                        int value = (int) animation.getAnimatedValue();
-                        colorView.blink(value);
-                    }
-                });
-
-                animator.start();
+            if (v.getId() == R.id.btnInterests) {
+                intent = new Intent(MainActivity.this, InterestsActivity.class);
+            } else {
+                intent = new Intent(MainActivity.this, CustomActivity.class);
             }
 
-            if (v.equals(btnPulse)) {
-                ValueAnimator animator = ValueAnimator.ofInt(255, 0);
-                animator.setDuration(2000);
-                animator.setRepeatMode(ValueAnimator.REVERSE);
-                animator.setRepeatCount(3);
-                animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                    @Override
-                    public void onAnimationUpdate(ValueAnimator animation) {
-                        int value = (int) animation.getAnimatedValue();
-                        colorView.pulse(value);
-                    }
-                });
-
-                animator.start();
-            }
-
-            if (v.equals(btnRainbow)) {
-                final ValueAnimator animator = ValueAnimator.ofInt(100, 175);
-                animator.setDuration(2000);
-                animator.setRepeatCount(2);
-                animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                    @Override
-                    public void onAnimationUpdate(ValueAnimator animation) {
-                        int value = (int) animation.getAnimatedValue();
-                        colorView.rainbow(animation.getCurrentPlayTime(), value);
-                    }
-                });
-
-                animator.start();
-            }
-            if(v.equals(btnPair)){
-                //TODO: Find bluetooth module
-                searchForBluetoothDevices();
-            }
-            if(v.equals(btnSend)){
-                if(connMan != null){
-                    connMan.writeCharacteristic(colorView.backgroundPaint.getColor());
-                }else {
-                    System.out.println("Do you have connection?");
-                }
-            }
-        }
-    };
-
-    private SeekBar.OnSeekBarChangeListener sbListener = new SeekBar.OnSeekBarChangeListener() {
-        @Override
-        public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-            colorView.setBackgroundPaint(
-                    sbRed.getProgress(),
-                    sbGreen.getProgress(),
-                    sbBlue.getProgress()
-            );
-
-            /*if(connMan != null){  //When the connection is stable enough, we could technically send a color-message every time the color of the view changes.
-                connMan.writeCharacteristic(colorView.backgroundPaint.getColor());
-            }else {
-                System.out.println("Do you have connection?");
-            }*/
-        }
-
-        @Override
-        public void onStartTrackingTouch(SeekBar seekBar) {
-
-        }
-
-        @Override
-        public void onStopTrackingTouch(SeekBar seekBar) {
-
+            startActivity(intent);
         }
     };
 
     void searchForBluetoothDevices() {
-        Log.d(BluetoothManager.TAG, "Looking for BLE device");
+        Log.d(BleConnectionManager.TAG, "Looking for BLE device");
+        tvLoading.setText(getString(R.string.status_searching));
+        bleConnectionManager = new BleConnectionManager(getApplicationContext(),
+                (android.bluetooth.BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE));
+        bleConnectionManager.startScan();
+    }
 
-        connMan = new BleConnectionManager(getApplicationContext(),(android.bluetooth.BluetoothManager)getSystemService(Context.BLUETOOTH_SERVICE));
-        connMan.startScan();
+    void getLocationPermission() {
+        if (ContextCompat.checkSelfPermission(
+                MainActivity.this,
+                Manifest.permission.ACCESS_COARSE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED
+        ) {
+            ActivityCompat.requestPermissions(
+                    (Activity) MainActivity.this,
+                    new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
+                    REQUEST_ACCESS_COURSE_LOCATION);
+        }
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 1 && resultCode == -1) {
-            Log.d(BluetoothManager.TAG, "Bluetooth enabled on the server.");
-            if (!btManager.checkPairedDevices()) {
-                searchForBluetoothDevices();
-            }
+            Log.d(BleConnectionManager.TAG, "Bluetooth enabled on the phone.");
+            searchForBluetoothDevices();
         } else if (requestCode == 1 && resultCode == 0) {
-            Log.d(BluetoothManager.TAG, "Bluetooth not enabled on the server.");
+            Log.d(BleConnectionManager.TAG, "Bluetooth not enabled on the phone.");
         }
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        unregisterReceiver(btManager.receiver);
     }
 }

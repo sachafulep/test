@@ -9,7 +9,6 @@ import android.view.View;
 
 public class ColorView extends View {
     Paint backgroundPaint;
-    int radius;
     long currentPlayTime = -1;
     int repeat = 0;
 
