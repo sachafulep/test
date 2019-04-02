@@ -3,6 +3,7 @@ package com.sss.test;
 import android.animation.ValueAnimator;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
@@ -22,6 +23,9 @@ public class MainActivity extends AppCompatActivity {
     Button btnBlink;
     Button btnPulse;
     Button btnRainbow;
+    Button btnPair;
+    Button btnSend;
+    BleConnectionManager connMan;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,14 +50,17 @@ public class MainActivity extends AppCompatActivity {
         btnBlink = findViewById(R.id.btnBlink);
         btnPulse = findViewById(R.id.btnPulse);
         btnRainbow = findViewById(R.id.btnRainbow);
+        btnPair = findViewById(R.id.btnPair);
         sbRed.setOnSeekBarChangeListener(sbListener);
         sbGreen.setOnSeekBarChangeListener(sbListener);
         sbBlue.setOnSeekBarChangeListener(sbListener);
         btnBlink.setOnClickListener(btnListener);
         btnPulse.setOnClickListener(btnListener);
         btnRainbow.setOnClickListener(btnListener);
+        btnPair.setOnClickListener(btnListener);
+        btnSend =  findViewById(R.id.btnSend);
+        btnSend.setOnClickListener(btnListener);
     }
-
     private Button.OnClickListener btnListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -101,6 +108,17 @@ public class MainActivity extends AppCompatActivity {
 
                 animator.start();
             }
+            if(v.equals(btnPair)){
+                //TODO: Find bluetooth module
+                searchForBluetoothDevices();
+            }
+            if(v.equals(btnSend)){
+                if(connMan != null){
+                    connMan.writeCharacteristic(colorView.backgroundPaint.getColor());
+                }else {
+                    System.out.println("Do you have connection?");
+                }
+            }
         }
     };
 
@@ -112,6 +130,12 @@ public class MainActivity extends AppCompatActivity {
                     sbGreen.getProgress(),
                     sbBlue.getProgress()
             );
+
+            /*if(connMan != null){  //When the connection is stable enough, we could technically send a color-message every time the color of the view changes.
+                connMan.writeCharacteristic(colorView.backgroundPaint.getColor());
+            }else {
+                System.out.println("Do you have connection?");
+            }*/
         }
 
         @Override
@@ -126,12 +150,10 @@ public class MainActivity extends AppCompatActivity {
     };
 
     void searchForBluetoothDevices() {
-        IntentFilter filter = new IntentFilter();
-        filter.addAction(BluetoothDevice.ACTION_FOUND);
-        filter.addAction(BluetoothAdapter.ACTION_DISCOVERY_STARTED);
-        filter.addAction(BluetoothAdapter.ACTION_DISCOVERY_STARTED);
-        registerReceiver(btManager.receiver, filter);
-        btManager.bluetoothAdapter.startDiscovery();
+        Log.d(BluetoothManager.TAG, "Looking for BLE device");
+
+        connMan = new BleConnectionManager(getApplicationContext(),(android.bluetooth.BluetoothManager)getSystemService(Context.BLUETOOTH_SERVICE));
+        connMan.startScan();
     }
 
     @Override
