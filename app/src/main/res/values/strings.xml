@@ -10,4 +10,5 @@
     <string name="interests">Interests</string>
     <string name="status_searching">Searching for nearby wearable…</string>
     <string name="custom">Custom</string>
+    <string name="status_not_found">Wearable not found…</string>
 </resources>

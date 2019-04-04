@@ -6,23 +6,19 @@ import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.support.annotation.Nullable;
-import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
-import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
     BleConnectionManager bleConnectionManager;
@@ -30,13 +26,36 @@ public class MainActivity extends AppCompatActivity {
     private static final int REQUEST_ACCESS_COURSE_LOCATION = 2;
     private static final int REQUEST_ENABLE_BT = 1;
     TextView tvLoading;
+    static Handler handler;
+    LinearLayout btnLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         tvLoading = findViewById(R.id.tvLoading);
+        btnLayout = findViewById(R.id.btnLayout);
         getLocationPermission();
+
+        handler = new Handler(Looper.getMainLooper()) {
+
+            @Override
+            public void handleMessage(Message msg) {
+                Bundle data = msg.getData();
+                int status = data.getInt("status");
+                switch (status) {
+                    case 2:
+                        btnLayout.setVisibility(View.VISIBLE);
+                        tvLoading.setVisibility(View.INVISIBLE);
+                        findViewById(R.id.loadingPanel).setVisibility(View.INVISIBLE);
+                        break;
+                    case 4:
+                        tvLoading.setText(getString(R.string.status_not_found));
+                        findViewById(R.id.loadingPanel).setVisibility(View.INVISIBLE);
+                        break;
+                }
+            }
+        };
 
         if (bluetoothAdapter.isEnabled()) {
             searchForBluetoothDevices();
@@ -72,6 +91,16 @@ public class MainActivity extends AppCompatActivity {
         bleConnectionManager = new BleConnectionManager(getApplicationContext(),
                 (android.bluetooth.BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE));
         bleConnectionManager.startScan();
+        setScanTimer(5);
+    }
+
+    void setScanTimer(int seconds) {
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                bleConnectionManager.stopScan();
+            }
+        }, seconds * 1000);
     }
 
     void getLocationPermission() {

@@ -13,6 +13,10 @@ import android.bluetooth.le.ScanResult;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Build;
+import android.os.Bundle;
+import android.os.Message;
+
+import java.util.logging.Handler;
 
 class BleConnectionManager {
     static final String TAG = "Bluetooth";
@@ -34,6 +38,8 @@ class BleConnectionManager {
     private static BluetoothGatt bluetoothGatt;
     private Context applicationContext;
     private int mColor;
+    private Message msg = Message.obtain();
+    private Bundle bdl = new Bundle();
 
     BleConnectionManager(Context applicationContext, BluetoothManager bluetoothManager) {
         this.applicationContext = applicationContext;
@@ -51,6 +57,19 @@ class BleConnectionManager {
         });
     }
 
+    @TargetApi(Build.VERSION_CODES.M)
+    void stopScan() {
+        bluetoothLeScanner.stopScan(scanCallback);
+        BLE_STATUS = BLE_STOPPED_SCAN;
+        sendBleStatus();
+    }
+
+    private void sendBleStatus() {
+        bdl.putInt("status", BLE_STATUS);
+        msg.setData(bdl);
+        MainActivity.handler.sendMessage(msg);
+    }
+
     void writeCharacteristic(int color) {
         mColor = color;
         AsyncTask.execute(new Runnable() {
@@ -59,12 +78,6 @@ class BleConnectionManager {
                 writeAsync();
             }
         });
-    }
-
-    @TargetApi(Build.VERSION_CODES.M)
-    private void stopScan() {
-        bluetoothLeScanner.stopScan(scanCallback);
-        BLE_STATUS = BLE_STOPPED_SCAN;
     }
 
     private void writeAsync() {
@@ -119,6 +132,7 @@ class BleConnectionManager {
                     BLE_STATUS = BLE_CONNECTING;
                     bluetoothGatt = result.getDevice().connectGatt(applicationContext,
                             true, btGattCallback);
+                    sendBleStatus();
                 }
             }
         }
