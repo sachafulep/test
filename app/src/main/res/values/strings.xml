@@ -11,4 +11,10 @@
     <string name="status_searching">Searching for nearby wearable…</string>
     <string name="custom">Custom</string>
     <string name="status_not_found">Wearable not found…</string>
+    <string name="interests_title">Pick some topics that you are interested in.</string>
+    <string name="interests_subtitle">We\'ll use these to detect whether you match with people around you based on common interests.</string>
+    <string name="save">Save</string>
+    <string name="wearable">Comm-on Leather Jacket</string>
+    <string name="custom_title">Customize your jacket\'s ambient colors.</string>
+    <string name="custom_subtitle">These colors are shown whenever you have ambient mode on and there are no matches nearby.</string>
 </resources>

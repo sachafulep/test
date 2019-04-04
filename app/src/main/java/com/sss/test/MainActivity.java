@@ -58,7 +58,10 @@ public class MainActivity extends AppCompatActivity {
         };
 
         if (bluetoothAdapter.isEnabled()) {
-            searchForBluetoothDevices();
+//            searchForBluetoothDevices();
+            btnLayout.setVisibility(View.VISIBLE);
+            tvLoading.setVisibility(View.INVISIBLE);
+            findViewById(R.id.loadingPanel).setVisibility(View.INVISIBLE);
         } else {
             Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);

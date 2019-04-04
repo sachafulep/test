@@ -10,8 +10,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.SeekBar;
 
-import java.util.logging.Handler;
-
 public class CustomActivity extends AppCompatActivity {
     BleConnectionManager bleConnectionManager;
     ColorView colorView;

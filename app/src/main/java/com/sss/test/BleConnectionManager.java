@@ -16,8 +16,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Message;
 
-import java.util.logging.Handler;
-
 class BleConnectionManager {
     static final String TAG = "Bluetooth";
     private static final int BLE_SEARCHING = 0;
