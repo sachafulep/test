@@ -65,7 +65,7 @@ class BleConnectionManager {
     private void sendBleStatus() {
         bdl.putInt("status", BLE_STATUS);
         msg.setData(bdl);
-        MainActivity.handler.sendMessage(msg);
+        OverviewActivity.handler.sendMessage(msg);
     }
 
     void writeCharacteristic(int color) {

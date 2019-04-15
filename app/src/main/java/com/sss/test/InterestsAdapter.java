@@ -20,7 +20,7 @@ public class InterestsAdapter extends BaseAdapter {
     private Context context;
     private FragmentManager fragmentManager;
     private List<Button> interestButtons = new ArrayList<>();
-    public SparseIntArray colors = new SparseIntArray();
+    SparseIntArray colors = new SparseIntArray();
 
     InterestsAdapter(List<String> interests, Context context, FragmentManager fragmentManager) {
         this.interests = interests;
@@ -70,9 +70,13 @@ public class InterestsAdapter extends BaseAdapter {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ColorPickerDialogFragment dialog = new ColorPickerDialogFragment();
-                dialog.setArguments(bundle);
-                dialog.show(fragmentManager, "ColorPickerDialog");
+                if (colors.size() < 5) {
+                    ColorPickerDialogFragment dialog = new ColorPickerDialogFragment();
+                    dialog.setArguments(bundle);
+                    dialog.show(fragmentManager, "ColorPickerDialog");
+                } else {
+
+                }
             }
         });
 

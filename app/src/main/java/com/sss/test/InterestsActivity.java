@@ -66,6 +66,7 @@ public class InterestsActivity extends AppCompatActivity {
                 int color = data.getInt("color");
                 Button button = adapter.getItem(position);
                 adapter.colors.put(position, color);
+                System.out.println("yuh " + color);
                 button.setBackgroundColor(color);
                 adapter.notifyDataSetChanged();
                 tvCounter.setText(getString(R.string.counter, counter));

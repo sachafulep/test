@@ -18,7 +18,7 @@ public class ColorPickerDialogFragment extends DialogFragment {
     SeekBar sbGreen;
     SeekBar sbBlue;
     int position;
-    int color = 0;
+    int color;
 
     @Override
     public void setArguments(@Nullable Bundle args) {
@@ -32,6 +32,7 @@ public class ColorPickerDialogFragment extends DialogFragment {
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = requireActivity().getLayoutInflater();
+        color = Color.rgb(0, 0, 0);
 
         builder.setView(inflater.inflate(R.layout.dialog_color, null))
                 .setPositiveButton("save", new DialogInterface.OnClickListener() {
@@ -40,6 +41,12 @@ public class ColorPickerDialogFragment extends DialogFragment {
                         Message msg = Message.obtain();
                         Bundle bdl = new Bundle();
                         bdl.putInt("position", position);
+
+                        // -1 will not change the background color even though it is a valid color.
+                        if (color == -1) {
+                            color = -2;
+                        }
+
                         bdl.putInt("color", color);
                         msg.setData(bdl);
                         InterestsActivity.handler.sendMessage(msg);
@@ -69,8 +76,7 @@ public class ColorPickerDialogFragment extends DialogFragment {
     private SeekBar.OnSeekBarChangeListener sbListener = new SeekBar.OnSeekBarChangeListener() {
         @Override
         public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-            color = Color.argb(
-                    100,
+            color = Color.rgb(
                     sbRed.getProgress(),
                     sbGreen.getProgress(),
                     sbBlue.getProgress()
