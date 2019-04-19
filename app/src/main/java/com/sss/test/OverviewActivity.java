@@ -32,7 +32,7 @@ public class OverviewActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_overview);
         tvLoading = findViewById(R.id.tvLoading);
         btnLayout = findViewById(R.id.btnLayout);
         getLocationPermission();
