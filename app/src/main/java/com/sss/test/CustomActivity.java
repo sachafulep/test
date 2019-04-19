@@ -26,9 +26,11 @@ public class CustomActivity extends AppCompatActivity {
         setContentView(R.layout.activity_custom);
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
         ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setDisplayShowHomeEnabled(true);
-        actionBar.setTitle("");
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setDisplayShowHomeEnabled(true);
+            actionBar.setTitle("");
+        }
 
         bleConnectionManager = new BleConnectionManager(getApplicationContext(),
                 (android.bluetooth.BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE));

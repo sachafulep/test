@@ -78,4 +78,8 @@ public class ServiceView extends View {
         this.state = state;
         invalidate();
     }
+
+    public boolean getState() {
+        return state;
+    }
 }
