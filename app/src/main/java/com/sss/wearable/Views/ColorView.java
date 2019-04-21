@@ -1,4 +1,4 @@
-package com.sss.test;
+package com.sss.wearable.Views;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -22,12 +22,16 @@ public class ColorView extends View {
         backgroundPaint.setColor(Color.rgb(0, 0, 0));
     }
 
-    void setBackgroundPaint(int red, int green, int blue) {
-        backgroundPaint.setColor(Color.rgb(red, green, blue));
+    public void setBackgroundPaint(int color) {
+        backgroundPaint.setColor(color);
         invalidate();
     }
 
-    void blink(int time) {
+    public int getPaintColor() {
+        return backgroundPaint.getColor();
+    }
+
+    public void blink(int time) {
         if (time % 2 == 0) {
             backgroundPaint.setAlpha(255);
         } else {
@@ -37,12 +41,12 @@ public class ColorView extends View {
         invalidate();
     }
 
-    void pulse(int alpha) {
+    public void pulse(int alpha) {
         backgroundPaint.setAlpha(alpha);
         invalidate();
     }
 
-    void rainbow(long currentPlayTime, int value) {
+    public void rainbow(long currentPlayTime, int value) {
         if (this.currentPlayTime > currentPlayTime) {
             repeat++;
         }

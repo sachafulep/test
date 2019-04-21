@@ -1,4 +1,4 @@
-package com.sss.test;
+package com.sss.wearable;
 
 import android.Manifest;
 import android.app.Activity;
@@ -6,19 +6,24 @@ import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
-import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+
+import com.sss.wearable.Classes.BleConnectionManager;
+import com.sss.wearable.Classes.Database;
 
 public class OverviewActivity extends AppCompatActivity {
     BleConnectionManager bleConnectionManager;
@@ -26,13 +31,15 @@ public class OverviewActivity extends AppCompatActivity {
     private static final int REQUEST_ACCESS_COURSE_LOCATION = 2;
     private static final int REQUEST_ENABLE_BT = 1;
     TextView tvLoading;
-    static Handler handler;
+    public static Handler handler;
     LinearLayout btnLayout;
+    Database database;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_overview);
+        database = Database.getMainInstance(OverviewActivity.this);
         tvLoading = findViewById(R.id.tvLoading);
         btnLayout = findViewById(R.id.btnLayout);
         getLocationPermission();
@@ -113,7 +120,7 @@ public class OverviewActivity extends AppCompatActivity {
                 != PackageManager.PERMISSION_GRANTED
         ) {
             ActivityCompat.requestPermissions(
-                    (Activity) OverviewActivity.this,
+                    OverviewActivity.this,
                     new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
                     REQUEST_ACCESS_COURSE_LOCATION);
         }

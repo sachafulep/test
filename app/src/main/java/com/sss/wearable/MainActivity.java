@@ -1,4 +1,4 @@
-package com.sss.test;
+package com.sss.wearable;
 
 import android.bluetooth.BluetoothAdapter;
 import android.content.BroadcastReceiver;
@@ -10,9 +10,12 @@ import android.net.ConnectivityManager;
 import android.net.Network;
 import android.net.NetworkRequest;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.sss.wearable.Views.ServiceView;
 
 public class MainActivity extends AppCompatActivity {
     BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
@@ -21,6 +24,7 @@ public class MainActivity extends AppCompatActivity {
     ServiceView svBluetooth;
     ServiceView svLocation;
     Intent intent;
+    BroadcastReceiver receiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,14 +51,17 @@ public class MainActivity extends AppCompatActivity {
         svLocation.setState(hasLocationEnabled());
 
         if (svBluetooth.getState() && svInternet.getState() && svLocation.getState()) {
+            unregisterReceiver(receiver);
             startActivity(intent);
+            finish();
         }
 
         IntentFilter filter = new IntentFilter();
         filter.addAction(BluetoothAdapter.ACTION_STATE_CHANGED);
         filter.addAction(LocationManager.MODE_CHANGED_ACTION);
 
-        registerReceiver(getReceiver(), filter);
+        receiver = getReceiver();
+        registerReceiver(receiver, filter);
     }
 
     private void changeServiceState(String service, boolean state) {
@@ -73,7 +80,9 @@ public class MainActivity extends AppCompatActivity {
         }
 
         if (svBluetooth.getState() && svInternet.getState() && svLocation.getState()) {
+            unregisterReceiver(receiver);
             startActivity(intent);
+            finish();
         }
     }
 

@@ -1,4 +1,4 @@
-package com.sss.test;
+package com.sss.wearable.Fragments;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -6,25 +6,36 @@ import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Message;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.widget.SeekBar;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.DialogFragment;
+
+import com.sss.wearable.InterestsActivity;
+import com.sss.wearable.R;
+import com.sss.wearable.Views.ColorView;
+
 public class ColorPickerDialogFragment extends DialogFragment {
-    ColorView colorView;
-    SeekBar sbRed;
-    SeekBar sbGreen;
-    SeekBar sbBlue;
-    int position;
-    int color;
+    private ColorView colorView;
+    private SeekBar sbRed;
+    private SeekBar sbGreen;
+    private SeekBar sbBlue;
+    private int position;
+    private int color;
+    private int previousColor;
+    private String mode;
 
     @Override
     public void setArguments(@Nullable Bundle args) {
         super.setArguments(args);
         assert args != null;
         position = args.getInt("position");
+        mode = args.getString("mode");
+        if (mode != null && mode.equals("edit")) {
+            previousColor = args.getInt("color");
+        }
     }
 
     @NonNull
@@ -35,6 +46,11 @@ public class ColorPickerDialogFragment extends DialogFragment {
         color = Color.rgb(0, 0, 0);
 
         builder.setView(inflater.inflate(R.layout.dialog_color, null))
+                .setNeutralButton("cancel", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        ColorPickerDialogFragment.this.getDialog().cancel();
+                    }
+                })
                 .setPositiveButton("save", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
@@ -51,12 +67,22 @@ public class ColorPickerDialogFragment extends DialogFragment {
                         msg.setData(bdl);
                         InterestsActivity.handler.sendMessage(msg);
                     }
-                })
-                .setNegativeButton("cancel", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        ColorPickerDialogFragment.this.getDialog().cancel();
-                    }
                 });
+
+        if (mode.equals("edit")) {
+            color = previousColor;
+
+            builder.setNegativeButton("delete", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    Message msg = Message.obtain();
+                    Bundle bdl = new Bundle();
+                    bdl.putInt("position", position);
+                    bdl.putInt("color", 0);
+                    msg.setData(bdl);
+                    InterestsActivity.handler.sendMessage(msg);
+                }
+            });
+        }
 
         return builder.create();
     }
@@ -71,6 +97,12 @@ public class ColorPickerDialogFragment extends DialogFragment {
         sbRed.setOnSeekBarChangeListener(sbListener);
         sbGreen.setOnSeekBarChangeListener(sbListener);
         sbBlue.setOnSeekBarChangeListener(sbListener);
+        if (mode.equals("edit")) {
+            sbRed.setProgress(Color.red(previousColor));
+            sbGreen.setProgress(Color.green(previousColor));
+            sbBlue.setProgress(Color.blue(previousColor));
+            colorView.setBackgroundPaint(previousColor);
+        }
     }
 
     private SeekBar.OnSeekBarChangeListener sbListener = new SeekBar.OnSeekBarChangeListener() {
@@ -82,11 +114,7 @@ public class ColorPickerDialogFragment extends DialogFragment {
                     sbBlue.getProgress()
             );
 
-            colorView.setBackgroundPaint(
-                    sbRed.getProgress(),
-                    sbGreen.getProgress(),
-                    sbBlue.getProgress()
-            );
+            colorView.setBackgroundPaint(color);
         }
 
         @Override

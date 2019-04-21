@@ -1,14 +1,19 @@
-package com.sss.test;
+package com.sss.wearable;
 
 import android.animation.ValueAnimator;
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.SeekBar;
+
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+
+import com.sss.wearable.Classes.BleConnectionManager;
+import com.sss.wearable.Views.ColorView;
 
 public class CustomActivity extends AppCompatActivity {
     BleConnectionManager bleConnectionManager;
@@ -53,13 +58,13 @@ public class CustomActivity extends AppCompatActivity {
     private SeekBar.OnSeekBarChangeListener sbListener = new SeekBar.OnSeekBarChangeListener() {
         @Override
         public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-            colorView.setBackgroundPaint(
+            colorView.setBackgroundPaint(Color.rgb(
                     sbRed.getProgress(),
                     sbGreen.getProgress(),
                     sbBlue.getProgress()
-            );
+            ));
 
-            bleConnectionManager.writeCharacteristic(colorView.backgroundPaint.getColor());
+            bleConnectionManager.writeCharacteristic(colorView.getPaintColor());
         }
 
         @Override

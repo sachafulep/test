@@ -1,4 +1,4 @@
-package com.sss.test;
+package com.sss.wearable.Classes;
 
 import android.annotation.TargetApi;
 import android.bluetooth.BluetoothGatt;
@@ -16,8 +16,10 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Message;
 
-class BleConnectionManager {
-    static final String TAG = "Bluetooth";
+import com.sss.wearable.OverviewActivity;
+
+public class BleConnectionManager {
+    public static final String TAG = "Bluetooth";
     private static final int BLE_SEARCHING = 0;
     private static final int BLE_CONNECTING = 1;
     private static final int BLE_CONNECTED = 2;
@@ -39,13 +41,13 @@ class BleConnectionManager {
     private Message msg = Message.obtain();
     private Bundle bdl = new Bundle();
 
-    BleConnectionManager(Context applicationContext, BluetoothManager bluetoothManager) {
+    public BleConnectionManager(Context applicationContext, BluetoothManager bluetoothManager) {
         this.applicationContext = applicationContext;
         bluetoothLeScanner = bluetoothManager.getAdapter().getBluetoothLeScanner();
     }
 
     @TargetApi(Build.VERSION_CODES.M)
-    void startScan() {
+    public void startScan() {
         AsyncTask.execute(new Runnable() {
             @Override
             public void run() {
@@ -56,7 +58,7 @@ class BleConnectionManager {
     }
 
     @TargetApi(Build.VERSION_CODES.M)
-    void stopScan() {
+    public void stopScan() {
         bluetoothLeScanner.stopScan(scanCallback);
         BLE_STATUS = BLE_STOPPED_SCAN;
         sendBleStatus();
@@ -68,7 +70,7 @@ class BleConnectionManager {
         OverviewActivity.handler.sendMessage(msg);
     }
 
-    void writeCharacteristic(int color) {
+    public void writeCharacteristic(int color) {
         mColor = color;
         AsyncTask.execute(new Runnable() {
             @Override

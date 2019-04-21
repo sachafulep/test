@@ -1,4 +1,4 @@
-package com.sss.test;
+package com.sss.wearable;
 
 import org.junit.Test;
 

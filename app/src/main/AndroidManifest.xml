@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.sss.test">
+    package="com.sss.wearable">
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.BLUETOOTH" />
@@ -16,7 +16,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".MainActivity"
+            android:name="com.sss.wearable.MainActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -25,13 +25,13 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".CustomActivity"
+            android:name="com.sss.wearable.CustomActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".InterestsActivity"
+            android:name="com.sss.wearable.InterestsActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".OverviewActivity"
+            android:name="com.sss.wearable.OverviewActivity"
             android:theme="@style/AppTheme.NoActionBar" />
     </application>
 

@@ -1,4 +1,4 @@
-package com.sss.test;
+package com.sss.wearable.Views;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -7,6 +7,8 @@ import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.util.AttributeSet;
 import android.view.View;
+
+import com.sss.wearable.R;
 
 public class ServiceView extends View {
     Paint backgroundPaint;
@@ -74,7 +76,7 @@ public class ServiceView extends View {
         }
     }
 
-    void setState(boolean state) {
+    public void setState(boolean state) {
         this.state = state;
         invalidate();
     }
