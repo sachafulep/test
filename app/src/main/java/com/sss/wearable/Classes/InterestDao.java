@@ -19,5 +19,5 @@ public interface InterestDao {
     int getCount();
 
     @Update()
-    void updateInterest(Interest interest);
+    void updateInterest(List<Interest> interest);
 }

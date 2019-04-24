@@ -9,6 +9,7 @@ public class Interest {
     private int id;
     private String name;
     private int color;
+    private int position;
 
     public Interest(int id, String name, int color) {
         this.id = id;
@@ -38,5 +39,13 @@ public class Interest {
 
     public void setColor(int color) {
         this.color = color;
+    }
+
+    public int getPosition() {
+        return position;
+    }
+
+    public void setPosition(int position) {
+        this.position = position;
     }
 }

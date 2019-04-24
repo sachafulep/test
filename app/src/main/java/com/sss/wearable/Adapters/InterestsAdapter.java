@@ -1,7 +1,11 @@
 package com.sss.wearable.Adapters;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -76,7 +80,6 @@ public class InterestsAdapter extends BaseAdapter {
         });
 
         interestButtons.add(position, button);
-
         return layout;
     }
 
@@ -84,9 +87,14 @@ public class InterestsAdapter extends BaseAdapter {
         button.setText(interest.getName());
 
         if (interest.getColor() == 0) {
-            button.setBackgroundResource(R.drawable.button_inactive);
+            button.setBackgroundResource(R.drawable.button_interest);
         } else {
-            button.setBackgroundColor(interest.getColor());
+            GradientDrawable shape = new GradientDrawable();
+            shape.setShape(GradientDrawable.RECTANGLE);
+            shape.setCornerRadius(90);
+            shape.setColor(interest.getColor());
+            button.setBackground(shape);
+            button.setTextColor(getTextColor(interest.getColor()));
         }
 
         button.setAllCaps(false);
@@ -104,5 +112,36 @@ public class InterestsAdapter extends BaseAdapter {
     public void setInterestColor(int position, int color) {
         interests.get(position).setColor(color);
         counter++;
+    }
+
+    public void moveInterestToFront(int position) {
+        Interest interest = interests.get(position);
+        interest.setPosition(position);
+        interests.remove(interest);
+        interests.add(0, interest);
+    }
+
+    public void resetInterestPosition(int position) {
+        Interest interest = interests.get(position);
+        interests.remove(interest);
+        interests.add(interest.getPosition(), interest);
+    }
+
+    private int getTextColor(int color) {
+        double temp;
+
+        temp = Color.red(color) / 255.0;
+        double red = temp <= 0.03928 ? temp / 12.92 : Math.pow(((temp + 0.055) / 1.055), 2.4);
+
+        temp = Color.green(color) / 255.0;
+        double green = temp <= 0.03928 ? temp / 12.92 : Math.pow(((temp + 0.055) / 1.055), 2.4);
+
+        temp = Color.blue(color) / 255.0;
+        double blue = temp <= 0.03928 ? temp / 12.92 : Math.pow(((temp + 0.055) / 1.055), 2.4);
+
+        double L = 0.2126 * red + 0.7152 * green + 0.0722 * blue;
+
+        return L > 0.179 ? Color.parseColor("#000000") :
+                context.getColor(R.color.background);
     }
 }

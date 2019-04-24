@@ -1,5 +1,6 @@
 package com.sss.wearable;
 
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -13,11 +14,13 @@ import android.widget.TextView;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 
 import com.sss.wearable.Adapters.InterestsAdapter;
 import com.sss.wearable.Classes.Database;
 import com.sss.wearable.Classes.Interest;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -51,10 +54,7 @@ public class InterestsActivity extends AppCompatActivity {
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                for (Interest interest : adapter.interests) {
-                    database.interestDao().updateInterest(interest);
-                }
-
+                database.interestDao().updateInterest(adapter.interests);
                 finish();
             }
         });
@@ -84,11 +84,17 @@ public class InterestsActivity extends AppCompatActivity {
                         getSupportFragmentManager()
                 );
 
+                List<Interest> temp = new ArrayList<>();
                 for (Interest interest : adapter.interests) {
                     if (interest.getColor() != 0) {
                         counter++;
                         tvCounter.setText(getString(R.string.counter, counter));
+                        temp.add(interest);
                     }
+                }
+
+                for (Interest interest : temp) {
+                    adapter.moveInterestToFront(interest.getPosition());
                 }
 
                 // tell UI thread to update gvInterests with the loaded interests from database
@@ -110,15 +116,18 @@ public class InterestsActivity extends AppCompatActivity {
                     int color = data.getInt("color");
                     Button button = adapter.getItem(position);
                     adapter.setInterestColor(position, color);
-                    adapter.notifyDataSetChanged();
 
                     if (color == 0) {
                         button.setBackgroundResource(android.R.drawable.btn_default);
+                        adapter.resetInterestPosition(position);
                         counter--;
                     } else {
                         button.setBackgroundColor(color);
+                        adapter.moveInterestToFront(position);
                         counter++;
                     }
+
+                    adapter.notifyDataSetChanged();
 
                     tvCounter.setText(getString(R.string.counter, counter));
                 } else {
