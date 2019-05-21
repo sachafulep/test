@@ -9,7 +9,7 @@
     tools:context=".OverviewActivity">
 
     <TextView
-        android:id="@+id/textView6"
+        android:id="@+id/tvWearable"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
@@ -32,7 +32,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
-            android:id="@+id/imageView"
+            android:id="@+id/ivWearable"
             android:layout_width="match_parent"
             android:layout_height="250dp"
             app:srcCompat="@drawable/ic_iconfinder_icon" />

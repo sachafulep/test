@@ -1,11 +1,13 @@
 package com.sss.wearable;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.GridView;
@@ -17,6 +19,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 
 import com.sss.wearable.Adapters.InterestsAdapter;
+import com.sss.wearable.Classes.BleConnectionManager;
 import com.sss.wearable.Classes.Database;
 import com.sss.wearable.Classes.Interest;
 
@@ -32,6 +35,7 @@ public class InterestsActivity extends AppCompatActivity {
     Button btnSave;
     int counter;
     Database database;
+    BleConnectionManager bleConnectionManager;
     int id = 0;
 
     @Override
@@ -39,6 +43,7 @@ public class InterestsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_interest);
         database = Database.getInstance();
+        bleConnectionManager = BleConnectionManager.getInstance();
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -55,6 +60,7 @@ public class InterestsActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 database.interestDao().updateInterest(adapter.interests);
+                sendInterestsToWearable();
                 finish();
             }
         });
@@ -141,5 +147,19 @@ public class InterestsActivity extends AppCompatActivity {
     public boolean onSupportNavigateUp() {
         onBackPressed();
         return true;
+    }
+
+    public void sendInterestsToWearable() {
+        List<Interest> selectedInterests = new ArrayList<>();
+
+        for (Interest interest : adapter.interests) {
+            if (interest.getColor() != 0) {
+                selectedInterests.add(interest);
+            }
+        }
+
+        bleConnectionManager.writeInterest(selectedInterests);
+
+//            String hexColor = String.format("#%06X", (0xFFFFFF & interest.getColor()));
     }
 }

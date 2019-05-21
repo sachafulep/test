@@ -19,4 +19,5 @@
     <string name="custom_subtitle">These colors are shown whenever you have ambient mode on and there are no matches nearby.</string>
     <string name="counter">%d/5</string>
     <string name="MainActivityTitle">We need access to the following services</string>
+    <string name="connecting">Wearable found, connecting...</string>
 </resources>
