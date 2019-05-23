@@ -16,6 +16,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -32,10 +34,12 @@ public class OverviewActivity extends AppCompatActivity {
     private static final int REQUEST_ACCESS_COURSE_LOCATION = 2;
     private static final int REQUEST_ENABLE_BT = 1;
     TextView tvLoading;
+    TextView tvWearable;
     public static Handler handler;
     LinearLayout btnLayout;
     Database database;
     boolean connected = false;
+    RelativeLayout loadingPanel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +48,8 @@ public class OverviewActivity extends AppCompatActivity {
         database = Database.getMainInstance(OverviewActivity.this);
         tvLoading = findViewById(R.id.tvLoading);
         btnLayout = findViewById(R.id.btnLayout);
+        tvWearable = findViewById(R.id.tvWearable);
+        loadingPanel = findViewById(R.id.loadingPanel);
         final ImageView ivWearable = findViewById(R.id.ivWearable);
         getLocationPermission();
 
@@ -60,16 +66,25 @@ public class OverviewActivity extends AppCompatActivity {
                         break;
                     case 2:
                         connected = true;
+                        ivWearable.setVisibility(View.VISIBLE);
                         btnLayout.setVisibility(View.VISIBLE);
-                        tvLoading.setVisibility(View.INVISIBLE);
-                        findViewById(R.id.loadingPanel).setVisibility(View.INVISIBLE);
+                        tvLoading.setVisibility(View.GONE);
+                        loadingPanel.setVisibility(View.GONE);
                         break;
                     case 4:
                         if (!connected) {
                             tvLoading.setText(getString(R.string.status_not_found));
-                            findViewById(R.id.loadingPanel).setVisibility(View.INVISIBLE);
-                            break;
+                            loadingPanel.setVisibility(View.GONE);
                         }
+                        break;
+                    case 6:
+                        connected = false;
+                        tvLoading.setText(R.string.status_searching);
+                        ivWearable.setVisibility(View.GONE);
+                        btnLayout.setVisibility(View.GONE);
+                        tvLoading.setVisibility(View.VISIBLE);
+                        loadingPanel.setVisibility(View.VISIBLE);
+                        searchForBluetoothDevices();
                 }
             }
         };
@@ -111,7 +126,7 @@ public class OverviewActivity extends AppCompatActivity {
         bleConnectionManager = new BleConnectionManager(getApplicationContext(),
                 (android.bluetooth.BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE));
         bleConnectionManager.startScan();
-        setScanTimer(100);
+        setScanTimer(999999);
     }
 
     void setScanTimer(int seconds) {

@@ -17,6 +17,7 @@
         android:textAlignment="center"
         android:textColor="@android:color/black"
         android:textSize="20sp"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -34,6 +35,7 @@
         <ImageView
             android:id="@+id/ivWearable"
             android:layout_width="match_parent"
+            android:visibility="gone"
             android:layout_height="250dp"
             app:srcCompat="@drawable/ic_iconfinder_icon" />
 
@@ -42,6 +44,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
+            android:layout_marginBottom="32dp"
             android:gravity="center"
             app:layout_constraintBottom_toTopOf="@+id/tvLoading"
             app:layout_constraintEnd_toEndOf="parent"
@@ -60,6 +63,7 @@
             android:id="@+id/tvLoading"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textSize="16sp"
             android:textAlignment="center"
             app:layout_constraintBottom_toTopOf="@+id/btnLayout"
             app:layout_constraintEnd_toEndOf="parent"
@@ -74,7 +78,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="32dp"
         android:orientation="horizontal"
-        android:visibility="invisible"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
