@@ -37,6 +37,8 @@ public class CustomActivity extends AppCompatActivity {
             actionBar.setTitle("");
         }
 
+        getWindow().setStatusBarColor(getColor(R.color.backgroundDark));
+
         bleConnectionManager = new BleConnectionManager(getApplicationContext(),
                 (android.bluetooth.BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE));
 
