@@ -3,6 +3,7 @@ package com.sss.wearable;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -51,6 +52,8 @@ public class InterestsActivity extends AppCompatActivity {
             actionBar.setDisplayShowHomeEnabled(true);
             actionBar.setTitle("");
         }
+
+        getWindow().setStatusBarColor(getColor(R.color.backgroundDark));
 
         tvCounter = findViewById(R.id.tvCounter);
         tvCounter.setText(getString(R.string.counter, counter));

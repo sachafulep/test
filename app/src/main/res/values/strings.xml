@@ -14,10 +14,11 @@
     <string name="interests_title">Pick some topics that you are interested in.</string>
     <string name="interests_subtitle">We\'ll use these to detect whether you match with people around you based on common interests.</string>
     <string name="save">Save</string>
-    <string name="wearable">Comm-on Leather Jacket</string>
+    <string name="wearableName">Comm-on Jacket</string>
     <string name="custom_title">Customize your jacket\'s ambient colors.</string>
     <string name="custom_subtitle">These colors are shown whenever you have ambient mode on and there are no matches nearby.</string>
     <string name="counter">%d/5</string>
     <string name="MainActivityTitle">We need access to the following services</string>
     <string name="connecting">Wearable found, connecting...</string>
+    <string name="wearable_image_description">image of connected wearable</string>
 </resources>

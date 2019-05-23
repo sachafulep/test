@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -53,6 +54,8 @@ public class OverviewActivity extends AppCompatActivity {
         final ImageView ivWearable = findViewById(R.id.ivWearable);
         getLocationPermission();
 
+        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+
         handler = new Handler(Looper.getMainLooper()) {
 
             @Override
@@ -90,10 +93,11 @@ public class OverviewActivity extends AppCompatActivity {
         };
 
         if (bluetoothAdapter.isEnabled()) {
-            searchForBluetoothDevices();
-//            btnLayout.setVisibility(View.VISIBLE);
-//            tvLoading.setVisibility(View.INVISIBLE);
-//            findViewById(R.id.loadingPanel).setVisibility(View.INVISIBLE);
+//            searchForBluetoothDevices();
+            tvWearable.setVisibility(View.VISIBLE);
+            btnLayout.setVisibility(View.VISIBLE);
+            ivWearable.setVisibility(View.VISIBLE);
+            findViewById(R.id.loadingPanel).setVisibility(View.INVISIBLE);
         } else {
             Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);

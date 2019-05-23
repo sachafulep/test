@@ -12,17 +12,18 @@
         android:id="@+id/tvWearable"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="@string/wearable"
+        android:layout_marginTop="26dp"
+        android:text="@string/wearableName"
         android:textAlignment="center"
         android:textColor="@android:color/black"
-        android:textSize="20sp"
+        android:textSize="26sp"
         android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <LinearLayout
+        android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="200dp"
@@ -35,8 +36,9 @@
         <ImageView
             android:id="@+id/ivWearable"
             android:layout_width="match_parent"
-            android:visibility="gone"
             android:layout_height="250dp"
+            android:contentDescription="@string/wearable_image_description"
+            android:visibility="gone"
             app:srcCompat="@drawable/ic_iconfinder_icon" />
 
         <RelativeLayout
@@ -63,8 +65,8 @@
             android:id="@+id/tvLoading"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="16sp"
             android:textAlignment="center"
+            android:textSize="16sp"
             app:layout_constraintBottom_toTopOf="@+id/btnLayout"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -72,35 +74,44 @@
 
     </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/btnLayout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="32dp"
-        android:orientation="horizontal"
-        android:visibility="gone"
+    <FrameLayout
+        android:layout_width="380dp"
+        android:layout_height="70dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
-        <Button
-            android:id="@+id/btnInterests"
-            style="@style/Widget.AppCompat.Button.Colored"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="25dp"
-            android:layout_weight="1"
-            android:background="@drawable/button_blue"
-            android:text="@string/interests" />
+        <com.sss.wearable.Views.OverviewBottomView
+            android:id="@+id/overViewBottomView"
+            android:layout_width="match_parent"
+            android:layout_height="70dp" />
 
-        <Button
-            android:id="@+id/btnCustom"
-            style="@style/Widget.AppCompat.Button.Colored"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@drawable/button_blue"
-            android:text="@string/custom" />
-    </LinearLayout>
+        <LinearLayout
+            android:id="@+id/btnLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:visibility="gone">
+
+            <Button
+                android:id="@+id/btnInterests"
+                style="@style/Widget.AppCompat.Button.Colored"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="25dp"
+                android:layout_weight="1"
+                android:background="@android:color/transparent"
+                android:text="@string/interests" />
+
+            <Button
+                android:id="@+id/btnCustom"
+                style="@style/Widget.AppCompat.Button.Colored"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@android:color/transparent"
+                android:text="@string/custom" />
+        </LinearLayout>
+    </FrameLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -87,7 +87,7 @@ public class InterestsAdapter extends BaseAdapter {
         button.setText(interest.getName());
 
         if (interest.getColor() == 0) {
-            button.setBackgroundResource(R.drawable.button_interest);
+            button.setBackgroundResource(R.drawable.button_interest_border);
         } else {
             GradientDrawable shape = new GradientDrawable();
             shape.setShape(GradientDrawable.RECTANGLE);

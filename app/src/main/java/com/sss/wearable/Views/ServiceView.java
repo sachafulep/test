@@ -13,6 +13,7 @@ import com.sss.wearable.R;
 public class ServiceView extends View {
     Paint backgroundPaint;
     Paint blackPaint;
+    Paint whitePaint;
     AttributeSet attrs;
     boolean state = false;
 
@@ -24,12 +25,16 @@ public class ServiceView extends View {
 
     private void init() {
         backgroundPaint = new Paint();
+        backgroundPaint.setColor(Color.rgb(79, 75, 75));
+
         blackPaint = new Paint();
-        backgroundPaint.setColor(Color.rgb(238, 238, 238));
         blackPaint.setColor(Color.rgb(0, 0, 0));
-        blackPaint.setTextSize(40);
         blackPaint.setStrokeWidth(3);
-        blackPaint.setTypeface(Typeface.DEFAULT);
+
+        whitePaint = new Paint();
+        whitePaint.setColor(Color.rgb(238, 238, 238));
+        whitePaint.setTextSize(48);
+        whitePaint.setTypeface(Typeface.DEFAULT);
     }
 
     @Override
@@ -51,15 +56,6 @@ public class ServiceView extends View {
         }
 
         canvas.drawRoundRect(
-                0,
-                0,
-                getWidth(),
-                getHeight(),
-                radius,
-                radius,
-                blackPaint);
-
-        canvas.drawRoundRect(
                 3,
                 3,
                 getWidth() - 3,
@@ -68,7 +64,9 @@ public class ServiceView extends View {
                 radius,
                 backgroundPaint);
 
-        canvas.drawText(text, 70, 110, blackPaint);
+        canvas.drawCircle(getWidth() - 87, 90, 87, whitePaint);
+
+        canvas.drawText(text, 70, 110, whitePaint);
 
         if (state) {
             canvas.drawLine(getWidth() - 140, 110, getWidth() - 110, getHeight() - 40, blackPaint);
