@@ -9,8 +9,10 @@ import android.view.View;
 
 public class ColorView extends View {
     Paint backgroundPaint;
+    Paint textPaint;
     long currentPlayTime = -1;
     int repeat = 0;
+    String name = "";
 
     public ColorView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -20,11 +22,20 @@ public class ColorView extends View {
     private void init() {
         backgroundPaint = new Paint();
         backgroundPaint.setColor(Color.rgb(0, 0, 0));
+
+        textPaint = new Paint();
+        textPaint.setColor(Color.rgb(238, 238, 238));
+        textPaint.setTextSize(64);
+        textPaint.setTextAlign(Paint.Align.CENTER);
     }
 
     public void setBackgroundPaint(int color) {
         backgroundPaint.setColor(color);
         invalidate();
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public int getPaintColor() {
@@ -85,5 +96,10 @@ public class ColorView extends View {
                 radius,
                 radius,
                 backgroundPaint);
+
+        int x = getWidth() / 2;
+        int y = (int) (getHeight() / 2 - ((textPaint.descent() + textPaint.ascent()) / 2));
+
+        canvas.drawText(name, x, y, textPaint);
     }
 }

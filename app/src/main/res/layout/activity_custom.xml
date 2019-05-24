@@ -88,7 +88,7 @@
             <View
                 android:layout_width="20dp"
                 android:layout_height="20dp"
-                android:background="@drawable/red_block" />
+                android:background="@drawable/circle_red" />
 
             <SeekBar
                 android:id="@+id/sbRed"
@@ -107,7 +107,7 @@
             <View
                 android:layout_width="20dp"
                 android:layout_height="20dp"
-                android:background="@drawable/green_block" />
+                android:background="@drawable/circle_green" />
 
             <SeekBar
                 android:id="@+id/sbGreen"
@@ -125,7 +125,7 @@
             <View
                 android:layout_width="20dp"
                 android:layout_height="20dp"
-                android:background="@drawable/blue_block" />
+                android:background="@drawable/circle_blue" />
 
             <SeekBar
                 android:id="@+id/sbBlue"
@@ -157,7 +157,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
                 android:width="100dp"
-                android:background="@drawable/button_interest_border"
+                android:background="@drawable/button_interest_"
                 android:text="@string/blink"
                 android:textColor="@android:color/black" />
 
@@ -168,7 +168,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
                 android:width="100dp"
-                android:background="@drawable/button_interest_border"
+                android:background="@drawable/button_interest_"
                 android:text="@string/pulse"
                 android:textColor="@android:color/black" />
 
@@ -179,7 +179,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
                 android:width="100dp"
-                android:background="@drawable/button_interest_border"
+                android:background="@drawable/button_interest_"
                 android:text="@string/rainbow"
                 android:textColor="@android:color/black" />
 

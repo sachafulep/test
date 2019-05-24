@@ -22,7 +22,7 @@
         android:id="@+id/constraintLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/backgroundDark"
+        android:background="@drawable/bar_top"
         app:layout_constraintEnd_toStartOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toolbar">
@@ -71,7 +71,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:layout_marginBottom="20dp"
+            android:layout_marginBottom="40dp"
             android:numColumns="3"
             android:overScrollMode="never"
             android:scrollbars="none"
@@ -90,30 +90,39 @@
         android:numColumns="3"
         android:overScrollMode="never"
         android:scrollbars="none"
-        app:layout_constraintBottom_toTopOf="@id/flBtnSave"
+        app:layout_constraintBottom_toTopOf="@id/btnSave"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/constraintLayout" />
 
-    <FrameLayout
-        android:id="@+id/flBtnSave"
-        android:layout_width="380dp"
+    <Button
+        android:id="@+id/btnSave"
+        android:layout_width="match_parent"
         android:layout_height="70dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+        android:background="@drawable/bar_bottom"
+        android:text="@string/save"
+        android:textColor="@color/background"
+        app:layout_constraintBottom_toBottomOf="parent" />
 
-        <com.sss.wearable.Views.BottomView
-            android:id="@+id/bottomView"
-            android:layout_width="match_parent"
-            android:layout_height="71dp" />
+    <!--<FrameLayout-->
+    <!--android:id="@+id/flBtnSave"-->
+    <!--android:layout_width="380dp"-->
+    <!--android:layout_height="70dp"-->
+    <!--app:layout_constraintBottom_toBottomOf="parent"-->
+    <!--app:layout_constraintEnd_toEndOf="parent"-->
+    <!--app:layout_constraintStart_toStartOf="parent">-->
 
-        <Button
-            android:id="@+id/btnSave"
-            android:layout_height="match_parent"
-            android:layout_width="match_parent"
-            android:background="@android:color/transparent"
-            android:text="@string/save"
-            android:textColor="@color/background" />
-    </FrameLayout>
+    <!--<com.sss.wearable.Views.BottomView-->
+    <!--android:id="@+id/bottomView"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="71dp" />-->
+
+    <!--<Button-->
+    <!--android:id="@+id/btnSave"-->
+    <!--android:layout_height="match_parent"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:background="@android:color/transparent"-->
+    <!--android:text="@string/save"-->
+    <!--android:textColor="@color/background" />-->
+    <!--</FrameLayout>-->
 </androidx.constraintlayout.widget.ConstraintLayout>

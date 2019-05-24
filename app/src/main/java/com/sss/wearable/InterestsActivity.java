@@ -1,14 +1,10 @@
 package com.sss.wearable;
 
-import android.content.Context;
-import android.graphics.Color;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.GridView;
@@ -17,7 +13,6 @@ import android.widget.TextView;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.content.ContextCompat;
 
 import com.sss.wearable.Adapters.InterestsAdapter;
 import com.sss.wearable.Classes.BleConnectionManager;
@@ -162,7 +157,5 @@ public class InterestsActivity extends AppCompatActivity {
         }
 
         bleConnectionManager.writeInterest(selectedInterests);
-
-//            String hexColor = String.format("#%06X", (0xFFFFFF & interest.getColor()));
     }
 }

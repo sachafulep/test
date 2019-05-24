@@ -7,6 +7,8 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Message;
 import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.SeekBar;
 
 import androidx.annotation.NonNull;
@@ -26,6 +28,7 @@ public class ColorPickerDialogFragment extends DialogFragment {
     private int color;
     private int previousColor;
     private String mode;
+    private String name;
 
     @Override
     public void setArguments(@Nullable Bundle args) {
@@ -33,6 +36,7 @@ public class ColorPickerDialogFragment extends DialogFragment {
         assert args != null;
         position = args.getInt("position");
         mode = args.getString("mode");
+        name = args.getString("name");
         if (mode != null && mode.equals("edit")) {
             previousColor = args.getInt("color");
         }
@@ -41,7 +45,7 @@ public class ColorPickerDialogFragment extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.DialogTheme);
         LayoutInflater inflater = requireActivity().getLayoutInflater();
         color = Color.rgb(0, 0, 0);
 
@@ -90,7 +94,11 @@ public class ColorPickerDialogFragment extends DialogFragment {
     @Override
     public void onStart() {
         super.onStart();
-        colorView = getDialog().findViewById(R.id.colorView);
+        LinearLayout container = getDialog().findViewById(R.id.colorViewContainer);
+        colorView = new ColorView(requireActivity(), null);
+        colorView.setName(name);
+        container.addView(colorView);
+
         sbRed = getDialog().findViewById(R.id.sbRed);
         sbGreen = getDialog().findViewById(R.id.sbGreen);
         sbBlue = getDialog().findViewById(R.id.sbBlue);

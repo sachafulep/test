@@ -12,4 +12,9 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
+
+    <style name="DialogTheme" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="android:background">@color/backgroundDark</item>
+        <item name="android:textColor">@color/background</item>
+    </style>
 </resources>

@@ -4,8 +4,6 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
-import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -62,6 +60,7 @@ public class InterestsAdapter extends BaseAdapter {
 
         final Bundle bundle = new Bundle();
         bundle.putInt("position", position);
+        bundle.putString("name", interest.getName());
         if (interests.get(position).getColor() == 0) {
             bundle.putString("mode", "set");
         } else {
@@ -87,7 +86,7 @@ public class InterestsAdapter extends BaseAdapter {
         button.setText(interest.getName());
 
         if (interest.getColor() == 0) {
-            button.setBackgroundResource(R.drawable.button_interest_border);
+            button.setBackgroundResource(R.drawable.button_interest_);
         } else {
             GradientDrawable shape = new GradientDrawable();
             shape.setShape(GradientDrawable.RECTANGLE);

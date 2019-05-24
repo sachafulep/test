@@ -8,8 +8,6 @@ import android.graphics.Typeface;
 import android.util.AttributeSet;
 import android.view.View;
 
-import com.sss.wearable.R;
-
 public class BottomView extends View {
     Paint backgroundPaint;
     Paint whitePaint;
