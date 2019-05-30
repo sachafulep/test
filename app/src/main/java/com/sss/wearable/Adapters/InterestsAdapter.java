@@ -24,7 +24,7 @@ public class InterestsAdapter extends BaseAdapter {
     public List<Interest> interests;
     private Context context;
     private FragmentManager fragmentManager;
-    private List<Button> interestButtons = new ArrayList<>();
+    public List<Button> interestButtons = new ArrayList<>();
     private int counter = 0;
 
     public InterestsAdapter(List<Interest> interests,
@@ -56,8 +56,19 @@ public class InterestsAdapter extends BaseAdapter {
         LinearLayout layout = new LinearLayout(context);
         Button button = new Button(context);
         Interest interest = interests.get(position);
-        setInterestButtonStyling(layout, button, interest);
 
+        setInterestButtonStyling(layout, button, interest);
+        setButtonClickListener(button, position, interest);
+
+        if (interestButtons.size() >= position + 1) {
+            interestButtons.set(position, button);
+        } else {
+            interestButtons.add(position, button);
+        }
+        return layout;
+    }
+
+    private void setButtonClickListener(Button button, int position, Interest interest) {
         final Bundle bundle = new Bundle();
         bundle.putInt("position", position);
         bundle.putString("name", interest.getName());
@@ -67,6 +78,7 @@ public class InterestsAdapter extends BaseAdapter {
             bundle.putString("mode", "edit");
             bundle.putInt("color", interests.get(position).getColor());
         }
+
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -77,9 +89,6 @@ public class InterestsAdapter extends BaseAdapter {
                 }
             }
         });
-
-        interestButtons.add(position, button);
-        return layout;
     }
 
     private void setInterestButtonStyling(LinearLayout layout, Button button, Interest interest) {
@@ -106,18 +115,6 @@ public class InterestsAdapter extends BaseAdapter {
 
         params.setMargins(10, 10, 10, 10);
         button.setLayoutParams(params);
-    }
-
-    public void setInterestColor(int position, int color) {
-        interests.get(position).setColor(color);
-        counter++;
-    }
-
-    public void moveInterestToFront(int position) {
-        Interest interest = interests.get(position);
-        interest.setPosition(position);
-        interests.remove(interest);
-        interests.add(0, interest);
     }
 
     public void resetInterestPosition(int position) {

@@ -103,26 +103,4 @@
         android:text="@string/save"
         android:textColor="@color/background"
         app:layout_constraintBottom_toBottomOf="parent" />
-
-    <!--<FrameLayout-->
-    <!--android:id="@+id/flBtnSave"-->
-    <!--android:layout_width="380dp"-->
-    <!--android:layout_height="70dp"-->
-    <!--app:layout_constraintBottom_toBottomOf="parent"-->
-    <!--app:layout_constraintEnd_toEndOf="parent"-->
-    <!--app:layout_constraintStart_toStartOf="parent">-->
-
-    <!--<com.sss.wearable.Views.BottomView-->
-    <!--android:id="@+id/bottomView"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="71dp" />-->
-
-    <!--<Button-->
-    <!--android:id="@+id/btnSave"-->
-    <!--android:layout_height="match_parent"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:background="@android:color/transparent"-->
-    <!--android:text="@string/save"-->
-    <!--android:textColor="@color/background" />-->
-    <!--</FrameLayout>-->
 </androidx.constraintlayout.widget.ConstraintLayout>

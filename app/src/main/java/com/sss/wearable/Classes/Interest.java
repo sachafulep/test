@@ -11,10 +11,11 @@ public class Interest {
     private int color;
     private int position;
 
-    public Interest(int id, String name, int color) {
+    public Interest(int id, String name, int color, int position) {
         this.id = id;
         this.name = name;
         this.color = color;
+        this.position = position;
     }
 
     public int getId() {

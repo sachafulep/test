@@ -25,8 +25,10 @@ import java.util.List;
 
 public class InterestsActivity extends AppCompatActivity {
     public static Handler handler;
-    private InterestsAdapter adapter;
+    private InterestsAdapter interestsAdapter;
+    private InterestsAdapter selectedInterestAdapter;
     GridView gvInterests;
+    GridView gvSelectedInterest;
     TextView tvCounter;
     Button btnSave;
     int counter;
@@ -53,11 +55,13 @@ public class InterestsActivity extends AppCompatActivity {
         tvCounter = findViewById(R.id.tvCounter);
         tvCounter.setText(getString(R.string.counter, counter));
         gvInterests = findViewById(R.id.gvInterests);
+        gvSelectedInterest = findViewById(R.id.gvSelectedInterests);
         btnSave = findViewById(R.id.btnSave);
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                database.interestDao().updateInterest(adapter.interests);
+                database.interestDao().updateInterest(interestsAdapter.interests);
+                database.interestDao().updateInterest(selectedInterestAdapter.interests);
                 sendInterestsToWearable();
                 finish();
             }
@@ -77,29 +81,35 @@ public class InterestsActivity extends AppCompatActivity {
 
                 if (database.interestDao().getCount() == 0) {
                     for (String interest : interests) {
-                        database.interestDao().insert(new Interest(id, interest, 0));
+                        database.interestDao().insert(new Interest(id, interest, 0, interests.indexOf(interest)));
                         id++;
                     }
                 }
 
-                adapter = new InterestsAdapter(
+                interestsAdapter = new InterestsAdapter(
                         database.interestDao().getAll(),
                         InterestsActivity.this,
                         getSupportFragmentManager()
                 );
 
-                List<Interest> temp = new ArrayList<>();
-                for (Interest interest : adapter.interests) {
+                List<Interest> selectedInterests = new ArrayList<>();
+
+                for (Interest interest : interestsAdapter.interests) {
                     if (interest.getColor() != 0) {
                         counter++;
-                        tvCounter.setText(getString(R.string.counter, counter));
-                        temp.add(interest);
+                        selectedInterests.add(interest);
                     }
                 }
 
-                for (Interest interest : temp) {
-                    adapter.moveInterestToFront(interest.getPosition());
+                for (Interest interest : selectedInterests) {
+                    interestsAdapter.interests.remove(interest);
                 }
+
+                selectedInterestAdapter = new InterestsAdapter(
+                        selectedInterests,
+                        InterestsActivity.this,
+                        getSupportFragmentManager()
+                );
 
                 // tell UI thread to update gvInterests with the loaded interests from database
                 handler.sendEmptyMessage(0);
@@ -118,24 +128,38 @@ public class InterestsActivity extends AppCompatActivity {
                 if (!data.isEmpty()) {
                     int position = data.getInt("position");
                     int color = data.getInt("color");
-                    Button button = adapter.getItem(position);
-                    adapter.setInterestColor(position, color);
+                    Button button;
+                    Interest interest;
 
                     if (color == 0) {
+                        interest = selectedInterestAdapter.interests.get(position);
+                        button = selectedInterestAdapter.getItem(position);
+                        selectedInterestAdapter.interests.remove(interest);
+                        interestsAdapter.interests.add(interest);
                         button.setBackgroundResource(android.R.drawable.btn_default);
-                        adapter.resetInterestPosition(position);
                         counter--;
                     } else {
-                        button.setBackgroundColor(color);
-                        adapter.moveInterestToFront(position);
+                        interest = interestsAdapter.interests.get(position);
+                        interestsAdapter.interests.remove(interest);
+                        selectedInterestAdapter.interests.add(interest);
+                        selectedInterestAdapter.notifyDataSetChanged();
+//                        int index = selectedInterestAdapter.interestButtons.size() - 1;
+
+                        for (Button b : selectedInterestAdapter.interestButtons) {
+                            System.out.println(b.getText().toString());
+                        }
+//                        button = selectedInterestAdapter.interestButtons.get(index);
+//                        button.setBackgroundColor(color);
                         counter++;
                     }
 
-                    adapter.notifyDataSetChanged();
-
+                    interestsAdapter.notifyDataSetChanged();
+//                    selectedInterestAdapter.notifyDataSetChanged();
                     tvCounter.setText(getString(R.string.counter, counter));
                 } else {
-                    gvInterests.setAdapter(adapter);
+                    tvCounter.setText(getString(R.string.counter, counter));
+                    gvInterests.setAdapter(interestsAdapter);
+                    gvSelectedInterest.setAdapter(selectedInterestAdapter);
                 }
             }
         };
@@ -148,14 +172,14 @@ public class InterestsActivity extends AppCompatActivity {
     }
 
     public void sendInterestsToWearable() {
-        List<Interest> selectedInterests = new ArrayList<>();
-
-        for (Interest interest : adapter.interests) {
-            if (interest.getColor() != 0) {
-                selectedInterests.add(interest);
-            }
-        }
-
-        bleConnectionManager.writeInterest(selectedInterests);
+//        List<Interest> selectedInterests = new ArrayList<>();
+//
+//        for (Interest interest : interestsAdapter.interests) {
+//            if (interest.getColor() != 0) {
+//                selectedInterests.add(interest);
+//            }
+//        }
+//
+//        bleConnectionManager.writeInterest(selectedInterests);
     }
 }
