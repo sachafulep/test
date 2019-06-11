@@ -157,7 +157,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
                 android:width="100dp"
-                android:background="@drawable/button_interest_"
+                android:background="@drawable/button_interest"
                 android:text="@string/blink"
                 android:textColor="@android:color/black" />
 
@@ -168,7 +168,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
                 android:width="100dp"
-                android:background="@drawable/button_interest_"
+                android:background="@drawable/button_interest"
                 android:text="@string/pulse"
                 android:textColor="@android:color/black" />
 
@@ -179,7 +179,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
                 android:width="100dp"
-                android:background="@drawable/button_interest_"
+                android:background="@drawable/button_interest"
                 android:text="@string/rainbow"
                 android:textColor="@android:color/black" />
 

@@ -34,9 +34,8 @@ public class ColorPickerDialogFragment extends DialogFragment {
     public void setArguments(@Nullable Bundle args) {
         super.setArguments(args);
         assert args != null;
-        position = args.getInt("position");
-        mode = args.getString("mode");
         name = args.getString("name");
+        mode = args.getString("mode");
         if (mode != null && mode.equals("edit")) {
             previousColor = args.getInt("color");
         }
@@ -49,6 +48,12 @@ public class ColorPickerDialogFragment extends DialogFragment {
         LayoutInflater inflater = requireActivity().getLayoutInflater();
         color = Color.rgb(0, 0, 0);
 
+        final Message msg = Message.obtain();
+        final Bundle bdl = new Bundle();
+
+        bdl.putString("name", name);
+        bdl.putString("mode", mode);
+
         builder.setView(inflater.inflate(R.layout.dialog_color, null))
                 .setNeutralButton("cancel", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
@@ -58,36 +63,26 @@ public class ColorPickerDialogFragment extends DialogFragment {
                 .setPositiveButton("save", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
-                        Message msg = Message.obtain();
-                        Bundle bdl = new Bundle();
-                        bdl.putInt("position", position);
-
                         // -1 will not change the background color even though it is a valid color.
                         if (color == -1) {
                             color = -2;
                         }
 
                         bdl.putInt("color", color);
-                        msg.setData(bdl);
                         InterestsActivity.handler.sendMessage(msg);
                     }
                 });
 
         if (mode.equals("edit")) {
-            color = previousColor;
-
             builder.setNegativeButton("delete", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
-                    Message msg = Message.obtain();
-                    Bundle bdl = new Bundle();
-                    bdl.putInt("position", position);
                     bdl.putInt("color", 0);
-                    msg.setData(bdl);
                     InterestsActivity.handler.sendMessage(msg);
                 }
             });
         }
 
+        msg.setData(bdl);
         return builder.create();
     }
 

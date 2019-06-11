@@ -1,6 +1,10 @@
 package com.sss.wearable.Classes;
 
+import android.widget.Button;
+import android.widget.LinearLayout;
+
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 @Entity(tableName = "interests")
@@ -10,6 +14,8 @@ public class Interest {
     private String name;
     private int color;
     private int position;
+    @Ignore
+    private LinearLayout view;
 
     public Interest(int id, String name, int color, int position) {
         this.id = id;
@@ -48,5 +54,13 @@ public class Interest {
 
     public void setPosition(int position) {
         this.position = position;
+    }
+
+    public LinearLayout getView() {
+        return view;
+    }
+
+    public void setView(LinearLayout view) {
+        this.view = view;
     }
 }

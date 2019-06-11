@@ -13,7 +13,7 @@ public interface InterestDao {
     List<Interest> getAll();
 
     @Insert
-    void insert(Interest interest);
+    void insert(List<Interest> interests);
 
     @Query("SELECT count(*) FROM interests")
     int getCount();
