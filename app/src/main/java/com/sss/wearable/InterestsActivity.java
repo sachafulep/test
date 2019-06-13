@@ -76,12 +76,12 @@ public class InterestsActivity extends AppCompatActivity {
             }
         });
 
+        selectedInterests = new ArrayList<>();
+
         if (database.interestDao().getCount() == 0) {
             fillDatabase();
         } else {
             interests = database.interestDao().getAll();
-            selectedInterests = new ArrayList<>();
-
             for (Interest interest : interests) {
                 if (interest.getColor() != 0) {
                     counter++;

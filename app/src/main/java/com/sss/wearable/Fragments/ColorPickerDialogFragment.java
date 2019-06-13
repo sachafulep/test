@@ -91,7 +91,8 @@ public class ColorPickerDialogFragment extends DialogFragment {
     public void onStart() {
         super.onStart();
         LinearLayout container = getDialog().findViewById(R.id.colorViewContainer);
-        TextView tvInstructions = getDialog().findViewById(R.id.tvInstructions);
+        TextView tvInstructions1 = getDialog().findViewById(R.id.tvInstructions1);
+        TextView tvInstructions2 = getDialog().findViewById(R.id.tvInstructions2);
         colorView = new ColorView(requireActivity(), null);
         colorView.setName(name, getTextColor(previousColor));
         container.addView(colorView);
@@ -103,13 +104,15 @@ public class ColorPickerDialogFragment extends DialogFragment {
         sbGreen.setOnSeekBarChangeListener(sbListener);
         sbBlue.setOnSeekBarChangeListener(sbListener);
         if (mode.equals("edit")) {
-            tvInstructions.setText(R.string.dialogInstructionEdit);
+            tvInstructions1.setText(R.string.dialogInstructionEdit1);
+            tvInstructions2.setText(R.string.dialogInstructionEdit2);
             sbRed.setProgress(Color.red(previousColor));
             sbGreen.setProgress(Color.green(previousColor));
             sbBlue.setProgress(Color.blue(previousColor));
             colorView.setBackgroundPaint(previousColor);
         } else {
-            tvInstructions.setText(R.string.dialogInstructionSet);
+            tvInstructions1.setText(R.string.dialogInstructionSet1);
+            tvInstructions2.setText(R.string.dialogInstructionSet2);
         }
     }
 

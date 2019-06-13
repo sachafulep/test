@@ -56,27 +56,29 @@
             app:layout_constraintTop_toBottomOf="@+id/textView7" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <com.sss.wearable.Views.ColorView
-        android:id="@+id/colorView"
-        android:layout_width="0dp"
-        android:layout_height="5dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="8dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/constraintLayout" />
+    <!--<com.sss.wearable.Views.ColorView-->
+        <!--android:id="@+id/colorView"-->
+        <!--android:layout_width="0dp"-->
+        <!--android:layout_height="5dp"-->
+        <!--android:layout_marginStart="8dp"-->
+        <!--android:layout_marginTop="16dp"-->
+        <!--android:layout_marginEnd="8dp"-->
+        <!--app:layout_constraintEnd_toEndOf="parent"-->
+        <!--app:layout_constraintHorizontal_bias="0.0"-->
+        <!--app:layout_constraintStart_toStartOf="parent"-->
+        <!--app:layout_constraintTop_toBottomOf="@+id/constraintLayout" />-->
 
     <FrameLayout
+        android:layout_marginTop="20dp"
         android:id="@+id/jacketContainer"
         android:layout_width="match_parent"
         android:layout_height="300dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/colorView" >
+        app:layout_constraintTop_toBottomOf="@+id/constraintLayout" >
 
         <ImageView
-            android:id="@+id/ivBackground"
+            android:id="@+id/ivWearable"
+            android:layout_gravity="center"
             android:layout_width="300dp"
             android:layout_height="300dp"
             android:src="@drawable/background"/>
@@ -85,7 +87,8 @@
             android:id="@+id/ivCover"
             android:layout_width="300dp"
             android:layout_height="300dp"
-            android:src="@drawable/background"/>
+            android:layout_gravity="center"
+            android:src="@drawable/cover"/>
     </FrameLayout>
 
     <TableLayout
@@ -153,57 +156,56 @@
                 android:max="255"
                 android:minHeight="29dp" />
         </TableRow>
-
     </TableLayout>
 
-    <TableLayout
-        android:id="@+id/tableLayout2"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tableLayout">
+    <!--<TableLayout-->
+        <!--android:id="@+id/tableLayout2"-->
+        <!--android:layout_width="0dp"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginTop="16dp"-->
+        <!--app:layout_constraintEnd_toEndOf="parent"-->
+        <!--app:layout_constraintStart_toStartOf="parent"-->
+        <!--app:layout_constraintTop_toBottomOf="@+id/tableLayout">-->
 
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center">
+        <!--<TableRow-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:gravity="center">-->
 
-            <Button
-                android:id="@+id/btnBlink"
-                style="@style/Base.Widget.AppCompat.Button.ButtonBar.AlertDialog"
-                android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:width="100dp"
-                android:background="@drawable/button_interest"
-                android:text="@string/blink"
-                android:textColor="@android:color/black" />
+            <!--<Button-->
+                <!--android:id="@+id/btnBlink"-->
+                <!--style="@style/Base.Widget.AppCompat.Button.ButtonBar.AlertDialog"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_margin="5dp"-->
+                <!--android:width="100dp"-->
+                <!--android:background="@drawable/button_interest"-->
+                <!--android:text="@string/blink"-->
+                <!--android:textColor="@android:color/black" />-->
 
-            <Button
-                android:id="@+id/btnPulse"
-                style="@style/Base.Widget.AppCompat.Button.ButtonBar.AlertDialog"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:width="100dp"
-                android:background="@drawable/button_interest"
-                android:text="@string/pulse"
-                android:textColor="@android:color/black" />
+            <!--<Button-->
+                <!--android:id="@+id/btnPulse"-->
+                <!--style="@style/Base.Widget.AppCompat.Button.ButtonBar.AlertDialog"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_margin="5dp"-->
+                <!--android:width="100dp"-->
+                <!--android:background="@drawable/button_interest"-->
+                <!--android:text="@string/pulse"-->
+                <!--android:textColor="@android:color/black" />-->
 
-            <Button
-                android:id="@+id/btnRainbow"
-                style="@style/Base.Widget.AppCompat.Button.ButtonBar.AlertDialog"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:width="100dp"
-                android:background="@drawable/button_interest"
-                android:text="@string/rainbow"
-                android:textColor="@android:color/black" />
+            <!--<Button-->
+                <!--android:id="@+id/btnRainbow"-->
+                <!--style="@style/Base.Widget.AppCompat.Button.ButtonBar.AlertDialog"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_margin="5dp"-->
+                <!--android:width="100dp"-->
+                <!--android:background="@drawable/button_interest"-->
+                <!--android:text="@string/rainbow"-->
+                <!--android:textColor="@android:color/black" />-->
 
-        </TableRow>
-    </TableLayout>
+        <!--</TableRow>-->
+    <!--</TableLayout>-->
 
     <FrameLayout
         android:id="@+id/flBtnSave"

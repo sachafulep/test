@@ -34,12 +34,12 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
-            android:id="@+id/ivBackground"
-            android:layout_width="match_parent"
+            android:id="@+id/ivWearable"
+            android:layout_width="250dp"
             android:layout_height="250dp"
             android:contentDescription="@string/wearable_image_description"
             android:visibility="gone"
-            app:srcCompat="@drawable/ic_iconfinder_icon" />
+            app:srcCompat="@drawable/jacket" />
 
         <RelativeLayout
             android:id="@+id/loadingPanel"
@@ -75,8 +75,10 @@
     </LinearLayout>
 
     <FrameLayout
+        android:id="@+id/buttonContainer"
         android:layout_width="380dp"
         android:layout_height="70dp"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
@@ -90,8 +92,7 @@
             android:id="@+id/btnLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="horizontal"
-            android:visibility="gone">
+            android:orientation="horizontal">
 
             <Button
                 android:id="@+id/btnInterests"
