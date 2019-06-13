@@ -33,8 +33,8 @@ public class BleConnectionManager {
     private static final int BLE_DISCONNECTED = 6;
     private static int BLE_STATUS;
     private final static String DEVICE_NAME = "SSS BLE";
-    private final static String SERVICE_UUID = "000046fa-0000-1000-8000-00805f9b34fb";
-    private final static String COLOR_UUID = "000046fb-0000-1000-8000-00805f9b34fb";
+    private final static String SERVICE_UUID = "000006fa-0000-1000-8000-00805f9b34fb";
+    private final static String COLOR_UUID = "000006fb-0000-1000-8000-00805f9b34fb";
     private final static String INTEREST_SERVICE_UUID = "000001a0-0000-1000-8000-00805f9b34fb";
     private final static String INTEREST_UUID = "000001a2-0000-1000-8000-00805f9b34fb";
 
@@ -88,54 +88,55 @@ public class BleConnectionManager {
 
     public void writeCharacteristic(int color) {
         mColor = color;
-        AsyncTask.execute(new Runnable() {
-            @Override
-            public void run() {
-                writeAsync();
-            }
-        });
+        writeAsync();
     }
 
     private void writeAsync() {
         if (bluetoothGatt == null) {
+            Log.d(TAG, "BluetoothGatt is null");
             return;
         }
 
         if (colorService == null) {
+            Log.d(TAG, "colorService is null");
             return;
         }
 
         if (colorCharacteristic == null) {
+            Log.d(TAG, "colorCharacteristic is null");
             return;
         }
 
         if (BLE_STATUS == BLE_DISCONNECTED) {
+            Log.d(TAG, "BLE is disconnected");
             bluetoothGatt.connect();
             bluetoothGatt.discoverServices();
         }
-
-        if (BLE_STATUS == BLE_WRITING && colorCharacteristic.getWriteType() ==
+        Log.d(TAG, "All is well, go send");
+        if (colorCharacteristic.getWriteType() ==
                 BluetoothGattCharacteristic.WRITE_TYPE_NO_RESPONSE) {
             colorCharacteristic.setWriteType(BluetoothGattCharacteristic.WRITE_TYPE_DEFAULT);
-            BLE_STATUS = BLE_WRITING;
-
-            byte[] dest = new byte[NUM_LEDS * 4];
-            for (int i = 0; i < NUM_LEDS; i++) {
-                int x = mColor;
-                int j = i << 2;
-                dest[j++] = 00;
-                dest[j++] = (byte) ((x >>> 16) & 0xff);
-                dest[j++] = (byte) ((x >>> 8) & 0xff);
-                dest[j++] = (byte) ((x) & 0xff);
-            }
-
-            colorCharacteristic.setValue(dest);
-            try {
-                bluetoothGatt.writeCharacteristic(colorCharacteristic);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
         }
+
+        byte[] dest = new byte[4];
+        dest[0] = 00;
+        dest[1] = (byte) ((mColor >>> 16) & 0xff);
+        dest[2] = (byte) ((mColor >>> 8) & 0xff);
+        dest[3] = (byte) ((mColor) & 0xff);
+        colorCharacteristic.setValue(dest);
+        Log.d(TAG, "Wrote color to controller");
+        try {
+            if(BLE_STATUS != BLE_WRITING) {
+                BLE_STATUS = BLE_WRITING;
+                boolean res = bluetoothGatt.writeCharacteristic(colorCharacteristic);
+                Log.d(TAG, res + "");
+            }
+        } catch (Exception e) {
+            Log.d(TAG, e.getMessage());
+            e.printStackTrace();
+        }
+
+        BLE_STATUS = BLE_CONNECTED;
     }
 
     @TargetApi(Build.VERSION_CODES.M)
@@ -184,10 +185,13 @@ public class BleConnectionManager {
                     // Check if found service is environmental sensing service
                     if (bluetoothGattService.getUuid().toString().equals(SERVICE_UUID)) {
                         colorService = bluetoothGattService;
+                        Log.d(TAG, "Color service found");
 
                         for (BluetoothGattCharacteristic bluetoothGattCharacteristic :
                                 bluetoothGattService.getCharacteristics()) {
                             // Check if found characteristic is Temperature characteristic
+                            Log.d(TAG, "Color char found");
+
                             if (bluetoothGattCharacteristic.getUuid().toString()
                                     .equals(COLOR_UUID)) {
                                 colorCharacteristic = bluetoothGattCharacteristic;
@@ -315,7 +319,8 @@ public class BleConnectionManager {
             byte green = (byte) Color.green(interest.getColor());
             byte blue = (byte) Color.blue(interest.getColor());
             int j = i;
-            dest[j] = (byte) interest.getId();          //This int's value is never bigger than a byte(255) so the parse should be safe
+            int id = interest.getId() + 1;
+            dest[j] = (byte) id;          //This int's value is never bigger than a byte(255) so the parse should be safe
             dest[++j] = red;//(byte) ((x >>> 16) & 0xff);
             dest[++j] = green;//(byte) ((x >>> 8) & 0xff);
             dest[++j] = blue;//(byte) ((x) & 0xff);

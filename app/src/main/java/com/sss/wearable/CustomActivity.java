@@ -3,9 +3,11 @@ package com.sss.wearable;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.SeekBar;
 
 import androidx.appcompat.app.ActionBar;
@@ -24,6 +26,7 @@ public class CustomActivity extends AppCompatActivity {
     Button btnBlink;
     Button btnPulse;
     Button btnRainbow;
+    ImageView ivWearable;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,9 +42,7 @@ public class CustomActivity extends AppCompatActivity {
 
         getWindow().setStatusBarColor(getColor(R.color.backgroundDark));
 
-        bleConnectionManager = new BleConnectionManager(getApplicationContext(),
-                (android.bluetooth.BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE));
-
+        bleConnectionManager = BleConnectionManager.getInstance();
         colorView = findViewById(R.id.colorView);
         sbRed = findViewById(R.id.sbRed);
         sbGreen = findViewById(R.id.sbGreen);
@@ -49,6 +50,7 @@ public class CustomActivity extends AppCompatActivity {
         btnBlink = findViewById(R.id.btnBlink);
         btnPulse = findViewById(R.id.btnPulse);
         btnRainbow = findViewById(R.id.btnRainbow);
+        ivWearable = findViewById(R.id.ivBackground);
         sbRed.setOnSeekBarChangeListener(sbListener);
         sbGreen.setOnSeekBarChangeListener(sbListener);
         sbBlue.setOnSeekBarChangeListener(sbListener);
@@ -60,14 +62,18 @@ public class CustomActivity extends AppCompatActivity {
     private SeekBar.OnSeekBarChangeListener sbListener = new SeekBar.OnSeekBarChangeListener() {
         @Override
         public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-            colorView.setBackgroundPaint(Color.rgb(
+            int currentColor = Color.rgb(
                     sbRed.getProgress(),
                     sbGreen.getProgress(),
                     sbBlue.getProgress()
-            ));
+            );
+
+            colorView.setBackgroundPaint(currentColor);
+            ivWearable.setColorFilter(currentColor, PorterDuff.Mode.SRC_IN);
 
             bleConnectionManager.writeCharacteristic(colorView.getPaintColor());
         }
+
 
         @Override
         public void onStartTrackingTouch(SeekBar seekBar) {

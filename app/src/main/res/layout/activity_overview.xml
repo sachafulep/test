@@ -34,7 +34,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
-            android:id="@+id/ivWearable"
+            android:id="@+id/ivBackground"
             android:layout_width="match_parent"
             android:layout_height="250dp"
             android:contentDescription="@string/wearable_image_description"

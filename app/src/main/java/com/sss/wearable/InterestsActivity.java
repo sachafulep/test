@@ -291,14 +291,6 @@ public class InterestsActivity extends AppCompatActivity {
     }
 
     public void sendInterestsToWearable() {
-//        List<Interest> selectedInterests = new ArrayList<>();
-//
-//        for (Interest interest : interestsAdapter.interests) {
-//            if (interest.getColor() != 0) {
-//                selectedInterests.add(interest);
-//            }
-//        }
-//
-//        bleConnectionManager.writeInterest(selectedInterests);
+        bleConnectionManager.writeInterest(selectedInterests);
     }
 }

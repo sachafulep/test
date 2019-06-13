@@ -24,7 +24,6 @@ public class ColorView extends View {
         backgroundPaint.setColor(Color.rgb(0, 0, 0));
 
         textPaint = new Paint();
-        textPaint.setColor(Color.rgb(238, 238, 238));
         textPaint.setTextSize(64);
         textPaint.setTextAlign(Paint.Align.CENTER);
     }
@@ -34,8 +33,10 @@ public class ColorView extends View {
         invalidate();
     }
 
-    public void setName(String name) {
+    public void setName(String name, int textColor) {
         this.name = name;
+        textPaint.setColor(textColor);
+        invalidate();
     }
 
     public int getPaintColor() {

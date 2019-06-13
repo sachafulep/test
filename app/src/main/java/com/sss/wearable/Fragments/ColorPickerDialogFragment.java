@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -90,8 +91,9 @@ public class ColorPickerDialogFragment extends DialogFragment {
     public void onStart() {
         super.onStart();
         LinearLayout container = getDialog().findViewById(R.id.colorViewContainer);
+        TextView tvInstructions = getDialog().findViewById(R.id.tvInstructions);
         colorView = new ColorView(requireActivity(), null);
-        colorView.setName(name);
+        colorView.setName(name, getTextColor(previousColor));
         container.addView(colorView);
 
         sbRed = getDialog().findViewById(R.id.sbRed);
@@ -101,10 +103,13 @@ public class ColorPickerDialogFragment extends DialogFragment {
         sbGreen.setOnSeekBarChangeListener(sbListener);
         sbBlue.setOnSeekBarChangeListener(sbListener);
         if (mode.equals("edit")) {
+            tvInstructions.setText(R.string.dialogInstructionEdit);
             sbRed.setProgress(Color.red(previousColor));
             sbGreen.setProgress(Color.green(previousColor));
             sbBlue.setProgress(Color.blue(previousColor));
             colorView.setBackgroundPaint(previousColor);
+        } else {
+            tvInstructions.setText(R.string.dialogInstructionSet);
         }
     }
 
@@ -118,6 +123,7 @@ public class ColorPickerDialogFragment extends DialogFragment {
             );
 
             colorView.setBackgroundPaint(color);
+            colorView.setName(name, getTextColor(color));
         }
 
         @Override
@@ -130,5 +136,22 @@ public class ColorPickerDialogFragment extends DialogFragment {
 
         }
     };
-}
 
+    private int getTextColor(int color) {
+        double temp;
+
+        temp = Color.red(color) / 255.0;
+        double red = temp <= 0.03928 ? temp / 12.92 : Math.pow(((temp + 0.055) / 1.055), 2.4);
+
+        temp = Color.green(color) / 255.0;
+        double green = temp <= 0.03928 ? temp / 12.92 : Math.pow(((temp + 0.055) / 1.055), 2.4);
+
+        temp = Color.blue(color) / 255.0;
+        double blue = temp <= 0.03928 ? temp / 12.92 : Math.pow(((temp + 0.055) / 1.055), 2.4);
+
+        double L = 0.2126 * red + 0.7152 * green + 0.0722 * blue;
+
+        return L > 0.179 ? Color.parseColor("#000000") :
+                Color.parseColor("#EEEEEE");
+    }
+}

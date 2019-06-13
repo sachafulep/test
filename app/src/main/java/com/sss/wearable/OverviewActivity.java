@@ -47,7 +47,7 @@ public class OverviewActivity extends AppCompatActivity {
         btnLayout = findViewById(R.id.btnLayout);
         tvWearable = findViewById(R.id.tvWearable);
         loadingPanel = findViewById(R.id.loadingPanel);
-        final ImageView ivWearable = findViewById(R.id.ivWearable);
+        final ImageView ivWearable = findViewById(R.id.ivBackground);
         getLocationPermission();
 
         getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
@@ -89,11 +89,11 @@ public class OverviewActivity extends AppCompatActivity {
         };
 
         if (bluetoothAdapter.isEnabled()) {
-//            searchForBluetoothDevices();
-            tvWearable.setVisibility(View.VISIBLE);
-            btnLayout.setVisibility(View.VISIBLE);
-            ivWearable.setVisibility(View.VISIBLE);
-            findViewById(R.id.loadingPanel).setVisibility(View.INVISIBLE);
+            searchForBluetoothDevices();
+//            tvWearable.setVisibility(View.VISIBLE);
+//            btnLayout.setVisibility(View.VISIBLE);
+//            ivWearable.setVisibility(View.VISIBLE);
+//            findViewById(R.id.loadingPanel).setVisibility(View.INVISIBLE);
         } else {
             Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);

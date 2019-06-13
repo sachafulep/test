@@ -21,4 +21,7 @@
     <string name="MainActivityTitle">We need access to the following services</string>
     <string name="connecting">Wearable found, connecting...</string>
     <string name="wearable_image_description">image of connected wearable</string>
+    <string name="dialogInstructionSet">1</string>
+    <string name="dialogInstructionEdit">2</string>
+    <string name="dialogInstructionCustom">3</string>
 </resources>
