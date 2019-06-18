@@ -119,10 +119,9 @@ public class BleConnectionManager {
         }
 
         byte[] dest = new byte[4];
-        dest[0] = 00;
-        dest[1] = (byte) ((mColor >>> 16) & 0xff);
-        dest[2] = (byte) ((mColor >>> 8) & 0xff);
-        dest[3] = (byte) ((mColor) & 0xff);
+        dest[0] = (byte) ((mColor >>> 16) & 0xff);
+        dest[1] = (byte) ((mColor >>> 8) & 0xff);
+        dest[2] = (byte) ((mColor) & 0xff);
         colorCharacteristic.setValue(dest);
         Log.d(TAG, "Wrote color to controller");
         try {

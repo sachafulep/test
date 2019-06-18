@@ -69,6 +69,7 @@ public class OverviewActivity extends AppCompatActivity {
                         ivWearable.setVisibility(View.VISIBLE);
                         tvLoading.setVisibility(View.GONE);
                         loadingPanel.setVisibility(View.GONE);
+                        buttonContainer.setVisibility(View.VISIBLE);
                         break;
                     case 4:
                         if (!connected) {
@@ -88,11 +89,11 @@ public class OverviewActivity extends AppCompatActivity {
         };
 
         if (bluetoothAdapter.isEnabled()) {
-//            searchForBluetoothDevices();
-            tvWearable.setVisibility(View.VISIBLE);
-            ivWearable.setVisibility(View.VISIBLE);
-            buttonContainer.setVisibility(View.VISIBLE);
-            findViewById(R.id.loadingPanel).setVisibility(View.INVISIBLE);
+            searchForBluetoothDevices();
+//            tvWearable.setVisibility(View.VISIBLE);
+//            ivWearable.setVisibility(View.VISIBLE);
+//            buttonContainer.setVisibility(View.VISIBLE);
+//            findViewById(R.id.loadingPanel).setVisibility(View.INVISIBLE);
         } else {
             Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);

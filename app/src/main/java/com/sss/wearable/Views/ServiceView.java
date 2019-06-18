@@ -35,6 +35,7 @@ public class ServiceView extends View {
         whitePaint.setColor(Color.rgb(238, 238, 238));
         whitePaint.setTextSize(48);
         whitePaint.setTypeface(Typeface.DEFAULT);
+        whitePaint.setStrokeWidth(7);
     }
 
     @Override
@@ -56,21 +57,19 @@ public class ServiceView extends View {
         }
 
         canvas.drawRoundRect(
-                3,
-                3,
-                getWidth() - 3,
-                getHeight() - 3,
+                0,
+                0,
+                getWidth(),
+                getHeight(),
                 radius,
                 radius,
                 backgroundPaint);
 
-        canvas.drawCircle(getWidth() - 87, 90, 87, whitePaint);
-
         canvas.drawText(text, 70, 110, whitePaint);
 
         if (state) {
-            canvas.drawLine(getWidth() - 140, 110, getWidth() - 110, getHeight() - 40, blackPaint);
-            canvas.drawLine(getWidth() - 110, getHeight() - 40, getWidth() - 60, 60, blackPaint);
+            canvas.drawLine(getWidth() - 140, 110, getWidth() - 110, getHeight() - 40, whitePaint);
+            canvas.drawLine(getWidth() - 114, getHeight() - 40, getWidth() - 60, 60, whitePaint);
         }
     }
 
