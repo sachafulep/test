@@ -110,6 +110,14 @@ public class OverviewActivity extends AppCompatActivity {
 
         btnInterests.setOnClickListener(listener);
         btnCustom.setOnClickListener(listener);
+
+        loadingPanel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                bleConnectionManager.stopScan();
+                updateUI(true);
+            }
+        });
     }
 
     private void updateUI(boolean connected) {

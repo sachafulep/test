@@ -248,7 +248,9 @@ public class InterestsActivity extends AppCompatActivity {
 
     private void showErrorDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(InterestsActivity.this);
-        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+        builder.setTitle(getString(R.string.errorDialogTitle, MAX_INTERESTS))
+                .setMessage(getString(R.string.errorDialogText))
+                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 dialog.dismiss();
             }
