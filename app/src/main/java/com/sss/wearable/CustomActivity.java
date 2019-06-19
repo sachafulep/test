@@ -3,6 +3,8 @@ package com.sss.wearable;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 
@@ -18,6 +20,8 @@ public class CustomActivity extends AppCompatActivity {
     SeekBar sbGreen;
     SeekBar sbBlue;
     ImageView ivWearable;
+    Button btnSave;
+    int currentColor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,34 +42,42 @@ public class CustomActivity extends AppCompatActivity {
         sbGreen = findViewById(R.id.sbGreen);
         sbBlue = findViewById(R.id.sbBlue);
         ivWearable = findViewById(R.id.ivWearable);
+        btnSave = findViewById(R.id.btnSave);
+
+        btnSave.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                bleConnectionManager.writeCharacteristic(currentColor);
+            }
+        });
+
+        SeekBar.OnSeekBarChangeListener sbListener = new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                currentColor = Color.rgb(
+                        sbRed.getProgress(),
+                        sbGreen.getProgress(),
+                        sbBlue.getProgress()
+                );
+
+                ivWearable.setColorFilter(currentColor, PorterDuff.Mode.SRC_IN);
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        };
+
         sbRed.setOnSeekBarChangeListener(sbListener);
         sbGreen.setOnSeekBarChangeListener(sbListener);
         sbBlue.setOnSeekBarChangeListener(sbListener);
     }
-
-    private SeekBar.OnSeekBarChangeListener sbListener = new SeekBar.OnSeekBarChangeListener() {
-        @Override
-        public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-            int currentColor = Color.rgb(
-                    sbRed.getProgress(),
-                    sbGreen.getProgress(),
-                    sbBlue.getProgress()
-            );
-
-            ivWearable.setColorFilter(currentColor, PorterDuff.Mode.SRC_IN);
-            bleConnectionManager.writeCharacteristic(currentColor);
-        }
-
-        @Override
-        public void onStartTrackingTouch(SeekBar seekBar) {
-
-        }
-
-        @Override
-        public void onStopTrackingTouch(SeekBar seekBar) {
-
-        }
-    };
 
     @Override
     public boolean onSupportNavigateUp() {

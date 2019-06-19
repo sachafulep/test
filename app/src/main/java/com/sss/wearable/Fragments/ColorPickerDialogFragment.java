@@ -1,5 +1,6 @@
 package com.sss.wearable.Fragments;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -7,7 +8,6 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Message;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -25,11 +25,33 @@ public class ColorPickerDialogFragment extends DialogFragment {
     private SeekBar sbRed;
     private SeekBar sbGreen;
     private SeekBar sbBlue;
-    private int position;
     private int color;
     private int previousColor;
     private String mode;
     private String name;
+    private SeekBar.OnSeekBarChangeListener sbListener = new SeekBar.OnSeekBarChangeListener() {
+        @Override
+        public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+            color = Color.rgb(
+                    sbRed.getProgress(),
+                    sbGreen.getProgress(),
+                    sbBlue.getProgress()
+            );
+
+            colorView.setBackgroundPaint(color);
+            colorView.setName(name, getTextColor(color));
+        }
+
+        @Override
+        public void onStartTrackingTouch(SeekBar seekBar) {
+
+        }
+
+        @Override
+        public void onStopTrackingTouch(SeekBar seekBar) {
+
+        }
+    };
 
     @Override
     public void setArguments(@Nullable Bundle args) {
@@ -42,6 +64,7 @@ public class ColorPickerDialogFragment extends DialogFragment {
         }
     }
 
+    @SuppressLint("InflateParams")
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
@@ -115,30 +138,6 @@ public class ColorPickerDialogFragment extends DialogFragment {
             tvInstructions2.setText(R.string.dialogInstructionSet2);
         }
     }
-
-    private SeekBar.OnSeekBarChangeListener sbListener = new SeekBar.OnSeekBarChangeListener() {
-        @Override
-        public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-            color = Color.rgb(
-                    sbRed.getProgress(),
-                    sbGreen.getProgress(),
-                    sbBlue.getProgress()
-            );
-
-            colorView.setBackgroundPaint(color);
-            colorView.setName(name, getTextColor(color));
-        }
-
-        @Override
-        public void onStartTrackingTouch(SeekBar seekBar) {
-
-        }
-
-        @Override
-        public void onStopTrackingTouch(SeekBar seekBar) {
-
-        }
-    };
 
     private int getTextColor(int color) {
         double temp;

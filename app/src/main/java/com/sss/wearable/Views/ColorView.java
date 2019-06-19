@@ -10,8 +10,6 @@ import android.view.View;
 public class ColorView extends View {
     Paint backgroundPaint;
     Paint textPaint;
-    long currentPlayTime = -1;
-    int repeat = 0;
     String name = "";
 
     public ColorView(Context context, AttributeSet attrs) {
@@ -36,51 +34,6 @@ public class ColorView extends View {
     public void setName(String name, int textColor) {
         this.name = name;
         textPaint.setColor(textColor);
-        invalidate();
-    }
-
-    public int getPaintColor() {
-        return backgroundPaint.getColor();
-    }
-
-    public void blink(int time) {
-        if (time % 2 == 0) {
-            backgroundPaint.setAlpha(255);
-        } else {
-            backgroundPaint.setAlpha(0);
-        }
-
-        invalidate();
-    }
-
-    public void pulse(int alpha) {
-        backgroundPaint.setAlpha(alpha);
-        invalidate();
-    }
-
-    public void rainbow(long currentPlayTime, int value) {
-        if (this.currentPlayTime > currentPlayTime) {
-            repeat++;
-        }
-
-        switch (repeat) {
-            case 0:
-                backgroundPaint.setARGB(255, value, 100, 100);
-                break;
-
-            case 1:
-                backgroundPaint.setARGB(255, 175, value, 100);
-                break;
-
-            case 2:
-                backgroundPaint.setARGB(255, 175, 175, value);
-                break;
-        }
-
-        this.currentPlayTime = currentPlayTime;
-        if (repeat > 2) {
-            repeat = 0;
-        }
         invalidate();
     }
 

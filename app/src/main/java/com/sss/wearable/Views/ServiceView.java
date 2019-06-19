@@ -73,12 +73,12 @@ public class ServiceView extends View {
         }
     }
 
+    public boolean isActive() {
+        return state;
+    }
+
     public void setState(boolean state) {
         this.state = state;
         invalidate();
-    }
-
-    public boolean getState() {
-        return state;
     }
 }

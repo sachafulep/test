@@ -31,129 +31,22 @@ public class BleConnectionManager {
     private static final int BLE_STOPPED_SCAN = 4;
     private static final int BLE_WRITING = 5;
     private static final int BLE_DISCONNECTED = 6;
-    private static int BLE_STATUS;
     private final static String DEVICE_NAME = "SSS BLE";
     private final static String SERVICE_UUID = "000006fa-0000-1000-8000-00805f9b34fb";
     private final static String COLOR_UUID = "000006fb-0000-1000-8000-00805f9b34fb";
     private final static String INTEREST_SERVICE_UUID = "000001a0-0000-1000-8000-00805f9b34fb";
     private final static String INTEREST_UUID = "000001a2-0000-1000-8000-00805f9b34fb";
-
-    private final static int NUM_LEDS = 20;
+    private static int BLE_STATUS;
+    private static BluetoothLeScanner bluetoothLeScanner;
+    private static BluetoothGatt bluetoothGatt;
+    private static BleConnectionManager instance = null;
     private BluetoothGattService colorService;
     private BluetoothGattService interestService;
     private BluetoothGattCharacteristic colorCharacteristic;
     private BluetoothGattCharacteristic interestCharacteristic;
-    private static BluetoothLeScanner bluetoothLeScanner;
-    private static BluetoothGatt bluetoothGatt;
     private Context applicationContext;
     private int mColor;
-    private Message msg;
     private Bundle bdl = new Bundle();
-    private static BleConnectionManager instance = null;
-
-    public static BleConnectionManager getInstance() {
-        return instance;
-    }
-
-    public BleConnectionManager(Context applicationContext, BluetoothManager bluetoothManager) {
-        this.applicationContext = applicationContext;
-        bluetoothLeScanner = bluetoothManager.getAdapter().getBluetoothLeScanner();
-        instance = this;
-    }
-
-    @TargetApi(Build.VERSION_CODES.M)
-    public void startScan() {
-        AsyncTask.execute(new Runnable() {
-            @Override
-            public void run() {
-                BLE_STATUS = BLE_SEARCHING;
-                bluetoothLeScanner.startScan(scanCallback);
-            }
-        });
-    }
-
-    @TargetApi(Build.VERSION_CODES.M)
-    public void stopScan() {
-        bluetoothLeScanner.stopScan(scanCallback);
-        BLE_STATUS = BLE_STOPPED_SCAN;
-        sendBleStatus();
-    }
-
-    private void sendBleStatus() {
-        msg = Message.obtain();
-        bdl.putInt("status", BLE_STATUS);
-        msg.setData(bdl);
-        OverviewActivity.handler.sendMessage(msg);
-    }
-
-    public void writeCharacteristic(int color) {
-        mColor = color;
-        writeAsync();
-    }
-
-    private void writeAsync() {
-        if (bluetoothGatt == null) {
-            Log.d(TAG, "BluetoothGatt is null");
-            return;
-        }
-
-        if (colorService == null) {
-            Log.d(TAG, "colorService is null");
-            return;
-        }
-
-        if (colorCharacteristic == null) {
-            Log.d(TAG, "colorCharacteristic is null");
-            return;
-        }
-
-        if (BLE_STATUS == BLE_DISCONNECTED) {
-            Log.d(TAG, "BLE is disconnected");
-            bluetoothGatt.connect();
-            bluetoothGatt.discoverServices();
-        }
-        Log.d(TAG, "All is well, go send");
-        if (colorCharacteristic.getWriteType() ==
-                BluetoothGattCharacteristic.WRITE_TYPE_NO_RESPONSE) {
-            colorCharacteristic.setWriteType(BluetoothGattCharacteristic.WRITE_TYPE_DEFAULT);
-        }
-
-        byte[] dest = new byte[4];
-        dest[0] = (byte) ((mColor >>> 16) & 0xff);
-        dest[1] = (byte) ((mColor >>> 8) & 0xff);
-        dest[2] = (byte) ((mColor) & 0xff);
-        colorCharacteristic.setValue(dest);
-        Log.d(TAG, "Wrote color to controller");
-        try {
-            if(BLE_STATUS != BLE_WRITING) {
-                BLE_STATUS = BLE_WRITING;
-                boolean res = bluetoothGatt.writeCharacteristic(colorCharacteristic);
-                Log.d(TAG, res + "");
-            }
-        } catch (Exception e) {
-            Log.d(TAG, e.getMessage());
-            e.printStackTrace();
-        }
-
-        BLE_STATUS = BLE_CONNECTED;
-    }
-
-    @TargetApi(Build.VERSION_CODES.M)
-    private ScanCallback scanCallback = new ScanCallback() {
-        @Override
-        public void onScanResult(int callbackType, ScanResult result) {
-            if (result.getDevice().getName() != null) {
-//                Log.d(TAG, result.getDevice().getName());
-                if (result.getDevice().getName().equals(DEVICE_NAME)) {
-                    bluetoothLeScanner.stopScan(scanCallback);
-                    BLE_STATUS = BLE_CONNECTING;
-                    bluetoothGatt = result.getDevice().connectGatt(applicationContext,
-                            true, btGattCallback);
-                    sendBleStatus();
-                }
-            }
-        }
-    };
 
     @TargetApi(Build.VERSION_CODES.M)
     private BluetoothGattCallback btGattCallback = new BluetoothGattCallback() {
@@ -271,6 +164,109 @@ public class BleConnectionManager {
             }
         }
     };
+    @TargetApi(Build.VERSION_CODES.M)
+    private ScanCallback scanCallback = new ScanCallback() {
+        @Override
+        public void onScanResult(int callbackType, ScanResult result) {
+            if (result.getDevice().getName() != null) {
+//                Log.d(TAG, result.getDevice().getName());
+                if (result.getDevice().getName().equals(DEVICE_NAME)) {
+                    bluetoothLeScanner.stopScan(scanCallback);
+                    BLE_STATUS = BLE_CONNECTING;
+                    bluetoothGatt = result.getDevice().connectGatt(applicationContext,
+                            true, btGattCallback);
+                    sendBleStatus();
+                }
+            }
+        }
+    };
+
+    public BleConnectionManager(Context applicationContext, BluetoothManager bluetoothManager) {
+        this.applicationContext = applicationContext;
+        bluetoothLeScanner = bluetoothManager.getAdapter().getBluetoothLeScanner();
+        instance = this;
+    }
+
+    public static BleConnectionManager getInstance() {
+        return instance;
+    }
+
+    @TargetApi(Build.VERSION_CODES.M)
+    public void startScan() {
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+                BLE_STATUS = BLE_SEARCHING;
+                bluetoothLeScanner.startScan(scanCallback);
+            }
+        });
+    }
+
+    @TargetApi(Build.VERSION_CODES.M)
+    public void stopScan() {
+        bluetoothLeScanner.stopScan(scanCallback);
+        BLE_STATUS = BLE_STOPPED_SCAN;
+        sendBleStatus();
+    }
+
+    private void sendBleStatus() {
+        Message msg = Message.obtain();
+        bdl.putInt("status", BLE_STATUS);
+        msg.setData(bdl);
+        OverviewActivity.handler.sendMessage(msg);
+    }
+
+    public void writeCharacteristic(int color) {
+        mColor = color;
+        writeAsync();
+    }
+
+    private void writeAsync() {
+        if (bluetoothGatt == null) {
+            Log.d(TAG, "BluetoothGatt is null");
+            return;
+        }
+
+        if (colorService == null) {
+            Log.d(TAG, "colorService is null");
+            return;
+        }
+
+        if (colorCharacteristic == null) {
+            Log.d(TAG, "colorCharacteristic is null");
+            return;
+        }
+
+        if (BLE_STATUS == BLE_DISCONNECTED) {
+            Log.d(TAG, "BLE is disconnected");
+            bluetoothGatt.connect();
+            bluetoothGatt.discoverServices();
+        }
+        Log.d(TAG, "All is well, go send");
+        if (colorCharacteristic.getWriteType() ==
+                BluetoothGattCharacteristic.WRITE_TYPE_NO_RESPONSE) {
+            colorCharacteristic.setWriteType(BluetoothGattCharacteristic.WRITE_TYPE_DEFAULT);
+        }
+
+        byte[] dest = new byte[4];
+        dest[0] = (byte) ((mColor >>> 16) & 0xff);
+        dest[1] = (byte) ((mColor >>> 8) & 0xff);
+        dest[2] = (byte) ((mColor) & 0xff);
+        colorCharacteristic.setValue(dest);
+        Log.d(TAG, "Wrote color to controller");
+        try {
+            if (BLE_STATUS != BLE_WRITING) {
+                BLE_STATUS = BLE_WRITING;
+                boolean res = bluetoothGatt.writeCharacteristic(colorCharacteristic);
+                Log.d(TAG, res + "");
+            }
+        } catch (Exception e) {
+            Log.d(TAG, e.getMessage());
+            e.printStackTrace();
+        }
+
+        BLE_STATUS = BLE_CONNECTED;
+    }
 
     public void writeInterest(List<Interest> selectedInterests) {
         Log.d(TAG, "Start writing to wearable");
@@ -313,7 +309,6 @@ public class BleConnectionManager {
         byte[] dest = new byte[20];
         for (int i = 0; i < selectedInterests.size() * 4; i += 4) {
             Interest interest = selectedInterests.get(i / 4);
-            int x = interest.getColor();
             byte red = (byte) Color.red(interest.getColor());
             byte green = (byte) Color.green(interest.getColor());
             byte blue = (byte) Color.blue(interest.getColor());

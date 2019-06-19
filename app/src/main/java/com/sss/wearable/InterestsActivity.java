@@ -1,5 +1,6 @@
 package com.sss.wearable;
 
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.os.AsyncTask;
@@ -15,6 +16,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
@@ -29,12 +31,8 @@ import java.util.Arrays;
 import java.util.List;
 
 public class InterestsActivity extends AppCompatActivity {
+    private static final int MAX_INTERESTS = 5;
     public static Handler handler;
-    private InterestsAdapter interestsAdapter;
-    private InterestsAdapter selectedInterestAdapter;
-    private List<Interest> interests;
-    private List<Interest> selectedInterests;
-    private static final int MAX_INTERESTS = 6;
     GridView gvInterests;
     GridView gvSelectedInterest;
     TextView tvCounter;
@@ -42,7 +40,10 @@ public class InterestsActivity extends AppCompatActivity {
     int counter;
     Database database;
     BleConnectionManager bleConnectionManager;
-    int id = 0;
+    private InterestsAdapter interestsAdapter;
+    private InterestsAdapter selectedInterestAdapter;
+    private List<Interest> interests;
+    private List<Interest> selectedInterests;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -130,27 +131,7 @@ public class InterestsActivity extends AppCompatActivity {
 
                     if (interest != null) {
                         interest.setColor(color);
-                        Button button = (Button) interest.getView().getChildAt(0);
-
-                        if (color == 0) {
-                            button.setBackgroundResource(R.drawable.button_interest);
-                            selectedInterests.remove(interest);
-                            interests.add(interest.getPosition(), interest);
-                            counter--;
-                        } else {
-                            GradientDrawable shape = new GradientDrawable();
-                            shape.setShape(GradientDrawable.RECTANGLE);
-                            shape.setCornerRadius(15);
-                            shape.setColor(interest.getColor());
-                            button.setBackground(shape);
-                            button.setTextColor(getTextColor(color));
-
-                            if (mode.equals("set")) {
-                                interests.remove(interest);
-                                selectedInterests.add(interest);
-                                counter++;
-                            }
-                        }
+                        updateUIButtonStyling(interest, color, mode);
                     }
 
                     interestsAdapter.notifyDataSetChanged();
@@ -161,6 +142,30 @@ public class InterestsActivity extends AppCompatActivity {
                 }
             }
         };
+    }
+
+    private void updateUIButtonStyling(Interest interest, int color, String mode) {
+        Button button = interest.getButton();
+
+        if (color == 0) {
+            button.setBackgroundResource(R.drawable.button_interest);
+            selectedInterests.remove(interest);
+            interests.add(interest.getPosition(), interest);
+            counter--;
+        } else {
+            GradientDrawable shape = new GradientDrawable();
+            shape.setShape(GradientDrawable.RECTANGLE);
+            shape.setCornerRadius(15);
+            shape.setColor(interest.getColor());
+            button.setBackground(shape);
+            button.setTextColor(getTextColor(color));
+
+            if (mode.equals("set")) {
+                interests.remove(interest);
+                selectedInterests.add(interest);
+                counter++;
+            }
+        }
     }
 
     private void fillInterestGrids() {
@@ -178,7 +183,7 @@ public class InterestsActivity extends AppCompatActivity {
             Button button = new Button(InterestsActivity.this);
             setInterestButtonStyling(layout, button, interest);
             setButtonClickListener(button, interest);
-            interest.setView(layout);
+            interest.setButton(button);
         }
 
         for (Interest interest : selectedInterests) {
@@ -186,7 +191,7 @@ public class InterestsActivity extends AppCompatActivity {
             Button button = new Button(InterestsActivity.this);
             setInterestButtonStyling(layout, button, interest);
             setButtonClickListener(button, interest);
-            interest.setView(layout);
+            interest.setButton(button);
         }
     }
 
@@ -235,10 +240,22 @@ public class InterestsActivity extends AppCompatActivity {
                     dialog.setArguments(bundle);
                     dialog.show(getSupportFragmentManager(), "ColorPickerDialog");
                 } else {
-                    // TODO show alert dialog
+                    showErrorDialog();
                 }
             }
         });
+    }
+
+    private void showErrorDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(InterestsActivity.this);
+        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                dialog.dismiss();
+            }
+        });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 
     private int getTextColor(int color) {
@@ -273,6 +290,7 @@ public class InterestsActivity extends AppCompatActivity {
                 );
 
                 interests = new ArrayList<>();
+                int id = 0;
 
                 for (String name : interestNames) {
                     interests.add(new Interest(id, name, 0, interestNames.indexOf(name)));

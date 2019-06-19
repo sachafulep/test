@@ -12,7 +12,6 @@ public class BottomView extends View {
     Paint backgroundPaint;
     Paint whitePaint;
     AttributeSet attrs;
-    boolean state = false;
 
     public BottomView(Context context, AttributeSet attrs) {
         super(context, attrs);

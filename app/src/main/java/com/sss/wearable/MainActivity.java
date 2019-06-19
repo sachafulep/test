@@ -11,14 +11,13 @@ import android.net.Network;
 import android.net.NetworkRequest;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.sss.wearable.Classes.Database;
 import com.sss.wearable.Views.ServiceView;
 
 public class MainActivity extends AppCompatActivity {
-    BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
     LocationManager locationManager;
     ServiceView svInternet;
     ServiceView svBluetooth;
@@ -32,27 +31,22 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
 
-        intent = new Intent(MainActivity.this,
-                OverviewActivity.class);
+        Database.createInstance(MainActivity.this);
         locationManager = (LocationManager) MainActivity.this.getSystemService(
                 Context.LOCATION_SERVICE);
-        TextView tvTitle = findViewById(R.id.tvTitle);
-        tvTitle.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(intent);
-            }
-        });
+        intent = new Intent(MainActivity.this,
+                OverviewActivity.class);
 
         svInternet = findViewById(R.id.svInternet);
         svBluetooth = findViewById(R.id.svBluetooth);
         svLocation = findViewById(R.id.svLocation);
 
+        BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         svBluetooth.setState(bluetoothAdapter.isEnabled());
         hasInternetConnection();
         svLocation.setState(hasLocationEnabled());
 
-        if (svBluetooth.getState() && svInternet.getState() && svLocation.getState()) {
+        if (svBluetooth.isActive() && svInternet.isActive() && svLocation.isActive()) {
             unregisterReceiver(receiver);
             startActivity(intent);
             finish();
@@ -81,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
                 break;
         }
 
-        if (svBluetooth.getState() && svInternet.getState() && svLocation.getState()) {
+        if (svBluetooth.isActive() && svInternet.isActive() && svLocation.isActive()) {
             unregisterReceiver(receiver);
             startActivity(intent);
             finish();
@@ -100,20 +94,6 @@ public class MainActivity extends AppCompatActivity {
                 new NetworkRequest.Builder().build(),
                 new Callback()
         );
-    }
-
-    private class Callback extends ConnectivityManager.NetworkCallback {
-        @Override
-        public void onAvailable(Network network) {
-            super.onAvailable(network);
-            changeServiceState("internet", true);
-        }
-
-        @Override
-        public void onLost(Network network) {
-            super.onLost(network);
-            changeServiceState("internet", false);
-        }
     }
 
     private BroadcastReceiver getReceiver() {
@@ -146,5 +126,19 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         };
+    }
+
+    private class Callback extends ConnectivityManager.NetworkCallback {
+        @Override
+        public void onAvailable(Network network) {
+            super.onAvailable(network);
+            changeServiceState("internet", true);
+        }
+
+        @Override
+        public void onLost(Network network) {
+            super.onLost(network);
+            changeServiceState("internet", false);
+        }
     }
 }

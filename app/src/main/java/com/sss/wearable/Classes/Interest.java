@@ -1,7 +1,6 @@
 package com.sss.wearable.Classes;
 
 import android.widget.Button;
-import android.widget.LinearLayout;
 
 import androidx.room.Entity;
 import androidx.room.Ignore;
@@ -15,7 +14,7 @@ public class Interest {
     private int color;
     private int position;
     @Ignore
-    private LinearLayout view;
+    private Button button;
 
     public Interest(int id, String name, int color, int position) {
         this.id = id;
@@ -56,11 +55,11 @@ public class Interest {
         this.position = position;
     }
 
-    public LinearLayout getView() {
-        return view;
+    public Button getButton() {
+        return button;
     }
 
-    public void setView(LinearLayout view) {
-        this.view = view;
+    public void setButton(Button button) {
+        this.button = button;
     }
 }

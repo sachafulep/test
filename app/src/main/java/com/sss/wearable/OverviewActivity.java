@@ -14,7 +14,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -24,76 +23,68 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.sss.wearable.Classes.BleConnectionManager;
-import com.sss.wearable.Classes.Database;
 
 public class OverviewActivity extends AppCompatActivity {
-    BleConnectionManager bleConnectionManager;
-    BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-    private static final int REQUEST_ACCESS_COURSE_LOCATION = 2;
+    boolean connected = false;
     private static final int REQUEST_ENABLE_BT = 1;
+    private static final int REQUEST_ACCESS_COURSE_LOCATION = 2;
+    public static Handler handler;
+    BleConnectionManager bleConnectionManager;
     TextView tvLoading;
     TextView tvWearable;
     FrameLayout buttonContainer;
-    public static Handler handler;
-    Database database;
-    boolean connected = false;
     RelativeLayout loadingPanel;
+    ImageView ivWearable;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_overview);
-        database = Database.getMainInstance(OverviewActivity.this);
+        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+
         tvLoading = findViewById(R.id.tvLoading);
         tvWearable = findViewById(R.id.tvWearable);
         loadingPanel = findViewById(R.id.loadingPanel);
         buttonContainer = findViewById(R.id.buttonContainer);
-        final ImageView ivWearable = findViewById(R.id.ivWearable);
+        ivWearable = findViewById(R.id.ivWearable);
         getLocationPermission();
 
-        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
-
         handler = new Handler(Looper.getMainLooper()) {
-
             @Override
             public void handleMessage(Message msg) {
                 Bundle data = msg.getData();
                 int status = data.getInt("status");
                 Log.d(BleConnectionManager.TAG, "Message received: status #" + status);
+
                 switch (status) {
                     case 1:
                         tvLoading.setText(R.string.connecting);
                         break;
                     case 2:
                         connected = true;
-                        ivWearable.setVisibility(View.VISIBLE);
-                        tvLoading.setVisibility(View.GONE);
-                        loadingPanel.setVisibility(View.GONE);
-                        buttonContainer.setVisibility(View.VISIBLE);
+                        updateUI(true);
                         break;
                     case 4:
                         if (!connected) {
-                            tvLoading.setText(getString(R.string.status_not_found));
+                            tvLoading.setText(getString(R.string.status_scan_ended));
                             loadingPanel.setVisibility(View.GONE);
                         }
                         break;
                     case 6:
                         connected = false;
-                        tvLoading.setText(R.string.status_searching);
-                        ivWearable.setVisibility(View.GONE);
-                        tvLoading.setVisibility(View.VISIBLE);
-                        loadingPanel.setVisibility(View.VISIBLE);
+                        updateUI(false);
                         searchForBluetoothDevices();
                 }
             }
         };
 
+        BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         if (bluetoothAdapter.isEnabled()) {
             searchForBluetoothDevices();
 //            tvWearable.setVisibility(View.VISIBLE);
 //            ivWearable.setVisibility(View.VISIBLE);
 //            buttonContainer.setVisibility(View.VISIBLE);
-//            findViewById(R.id.loadingPanel).setVisibility(View.INVISIBLE);
+//            loadingPanel.setVisibility(View.INVISIBLE);
         } else {
             Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
@@ -101,24 +92,44 @@ public class OverviewActivity extends AppCompatActivity {
 
         Button btnInterests = findViewById(R.id.btnInterests);
         Button btnCustom = findViewById(R.id.btnCustom);
+
+        Button.OnClickListener listener = new Button.OnClickListener() {
+            Intent intent;
+
+            @Override
+            public void onClick(View v) {
+                if (v.getId() == R.id.btnInterests) {
+                    intent = new Intent(OverviewActivity.this, InterestsActivity.class);
+                } else {
+                    intent = new Intent(OverviewActivity.this, CustomActivity.class);
+                }
+
+                startActivity(intent);
+            }
+        };
+
         btnInterests.setOnClickListener(listener);
         btnCustom.setOnClickListener(listener);
     }
 
-    Button.OnClickListener listener = new Button.OnClickListener() {
-        Intent intent;
+    private void updateUI(boolean connected) {
+        if (connected) {
+            tvLoading.setVisibility(View.GONE);
+            loadingPanel.setVisibility(View.GONE);
 
-        @Override
-        public void onClick(View v) {
-            if (v.getId() == R.id.btnInterests) {
-                intent = new Intent(OverviewActivity.this, InterestsActivity.class);
-            } else {
-                intent = new Intent(OverviewActivity.this, CustomActivity.class);
-            }
+            tvWearable.setVisibility(View.VISIBLE);
+            ivWearable.setVisibility(View.VISIBLE);
+            buttonContainer.setVisibility(View.VISIBLE);
+        } else {
+            tvWearable.setVisibility(View.GONE);
+            ivWearable.setVisibility(View.GONE);
+            buttonContainer.setVisibility(View.GONE);
 
-            startActivity(intent);
+            tvLoading.setVisibility(View.VISIBLE);
+            loadingPanel.setVisibility(View.VISIBLE);
+            tvLoading.setText(R.string.status_searching);
         }
-    };
+    }
 
     void searchForBluetoothDevices() {
         Log.d(BleConnectionManager.TAG, "Looking for BLE device");
@@ -126,16 +137,16 @@ public class OverviewActivity extends AppCompatActivity {
         bleConnectionManager = new BleConnectionManager(getApplicationContext(),
                 (android.bluetooth.BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE));
         bleConnectionManager.startScan();
-        setScanTimer(999999);
+        setScanTimer();
     }
 
-    void setScanTimer(int seconds) {
+    void setScanTimer() {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
                 bleConnectionManager.stopScan();
             }
-        }, seconds * 1000);
+        }, 999999);
     }
 
     void getLocationPermission() {

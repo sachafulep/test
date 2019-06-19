@@ -9,15 +9,13 @@ import androidx.room.RoomDatabase;
 public abstract class Database extends RoomDatabase {
     private static Database instance = null;
 
-    public static Database getMainInstance(Context context) {
+    public static void createInstance(Context context) {
         if (instance == null) {
             instance = Room
                     .databaseBuilder(context, Database.class, "mealsDatabase")
                     .allowMainThreadQueries()
                     .build();
         }
-
-        return instance;
     }
 
     public static Database getInstance() {

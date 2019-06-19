@@ -10,7 +10,7 @@
     <string name="interests">Interests</string>
     <string name="status_searching">Searching for nearby wearable…</string>
     <string name="custom">Custom</string>
-    <string name="status_not_found">Wearable not found…</string>
+    <string name="status_scan_ended">Scan ended…</string>
     <string name="interests_title">Interests</string>
     <string name="interests_subtitle">We\'ll use these to detect whether you match with people around you based on common interests.</string>
     <string name="save">Save</string>
@@ -25,4 +25,5 @@
     <string name="dialogInstructionSet2">Your wearable will light up with this color when you meet someone that shares this interest.</string>
     <string name="dialogInstructionEdit1">Edit this interest</string>
     <string name="dialogInstructionEdit2">You can either change the assigned color of this interest, or remove it altogether.</string>
+    <string name="ok">OK</string>
 </resources>

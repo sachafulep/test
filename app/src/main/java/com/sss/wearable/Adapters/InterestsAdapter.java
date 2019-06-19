@@ -3,7 +3,6 @@ package com.sss.wearable.Adapters;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 
 import com.sss.wearable.Classes.Interest;
 
@@ -33,6 +32,6 @@ public class InterestsAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        return interests.get(position).getView();
+        return interests.get(position).getButton();
     }
 }
