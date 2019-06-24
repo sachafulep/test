@@ -35,6 +35,7 @@ public class OverviewActivity extends AppCompatActivity {
     FrameLayout buttonContainer;
     RelativeLayout loadingPanel;
     ImageView ivWearable;
+    Button btnDebug;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +48,7 @@ public class OverviewActivity extends AppCompatActivity {
         loadingPanel = findViewById(R.id.loadingPanel);
         buttonContainer = findViewById(R.id.buttonContainer);
         ivWearable = findViewById(R.id.ivWearable);
+        btnDebug = findViewById(R.id.btnDebug);
         getLocationPermission();
 
         handler = new Handler(Looper.getMainLooper()) {
@@ -81,10 +83,6 @@ public class OverviewActivity extends AppCompatActivity {
         BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         if (bluetoothAdapter.isEnabled()) {
             searchForBluetoothDevices();
-//            tvWearable.setVisibility(View.VISIBLE);
-//            ivWearable.setVisibility(View.VISIBLE);
-//            buttonContainer.setVisibility(View.VISIBLE);
-//            loadingPanel.setVisibility(View.INVISIBLE);
         } else {
             Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
@@ -111,7 +109,7 @@ public class OverviewActivity extends AppCompatActivity {
         btnInterests.setOnClickListener(listener);
         btnCustom.setOnClickListener(listener);
 
-        loadingPanel.setOnClickListener(new View.OnClickListener() {
+        btnDebug.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 bleConnectionManager.stopScan();
@@ -124,6 +122,7 @@ public class OverviewActivity extends AppCompatActivity {
         if (connected) {
             tvLoading.setVisibility(View.GONE);
             loadingPanel.setVisibility(View.GONE);
+            btnDebug.setVisibility(View.GONE);
 
             tvWearable.setVisibility(View.VISIBLE);
             ivWearable.setVisibility(View.VISIBLE);
